@@ -16,7 +16,12 @@ module.exports = {
   },
   devtool: "cheap-eval-source-map",
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    alias: {
+      actions: path.resolve(__dirname, './src/actions'),
+      utils:   path.resolve(__dirname, './src/utils'),
+      views:   path.resolve(__dirname, './src/views')
+    }
   },
   plugins: [
     new ProgressBarPlugin()
