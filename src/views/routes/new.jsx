@@ -30,6 +30,11 @@ class NewRoute extends Component {
 
   handleMoveMarker(index, latitude, longitude) {
     const {places} = this.state;
+
+    if(!places[index]) {
+      return;
+    }
+
     places[index].latitude = latitude;
     places[index].longitude = longitude;
 
