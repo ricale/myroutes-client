@@ -42,7 +42,6 @@ export function fetchRoute(id) {
 }
 
 export function createRoute(data) {
-  console.log('data', data);
   return requester.fetch(
     `/routes`,
     actions.routes.create,

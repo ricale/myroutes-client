@@ -4,7 +4,7 @@ export default class RouteForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: (props.route || {}).name,
+      name: (props.route || {}).name || '',
     };
     this.handleChangeName = this.handleChangeName.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);

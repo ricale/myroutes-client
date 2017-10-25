@@ -15,7 +15,6 @@ function parseJson(response) {
 function _fetch(url, actions, options = {}) {
   const {method, data} = options;
   const body = data ? JSON.stringify(data) : '';
-  console.log('body', body)
 
   return dispatch => {
     dispatch(actions.request());
