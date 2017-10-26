@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 
 export default class DaumMap extends Component {
+  static defaultProps = {
+    markable: true,
+    searchable: true
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -20,7 +25,10 @@ export default class DaumMap extends Component {
   componentDidMount() {
     this.initMap();
     this.initMarkers();
-    this.initSearcher();
+
+    if(this.props.searchable) {
+      this.initSearcher();
+    }
   }
 
   handleClickMap(mouseEvent) {
@@ -36,12 +44,8 @@ export default class DaumMap extends Component {
   }
 
   handleRightClickMap(mouseEvent) {
-    const {onCreateMarker} = this.props;
-
     const latlng = mouseEvent.latLng;
-
     this.addMarker({latlng});
-    onCreateMarker && onCreateMarker(this.currentMarker, latlng.getLat(), latlng.getLng());
   }
 
   handleChangeKeyword(event) {
@@ -92,20 +96,24 @@ export default class DaumMap extends Component {
   }
 
   initMap() {
+    const {markable} = this.props;
+
     this.map = new daum.maps.Map(this.refs.mapContainer, {
       center: new daum.maps.LatLng(37.563115650880825, 126.96517864826323),
       level: 4
     });
 
-    daum.maps.event.addListener(this.map, 'click',      this.handleClickMap);
-    daum.maps.event.addListener(this.map, 'rightclick', this.handleRightClickMap);
+    if(markable) {
+      daum.maps.event.addListener(this.map, 'click',      this.handleClickMap);
+      daum.maps.event.addListener(this.map, 'rightclick', this.handleRightClickMap);
+    }
   }
 
   initMarkers() {
     const {markers} = this.props;
 
     (markers || []).forEach(m =>
-      this.addMarker(m)
+      this.addMarker(m, {noCallback: true})
     );
   }
 
@@ -119,7 +127,7 @@ export default class DaumMap extends Component {
 
     places.forEach((p, i) => {
       const latlng = new daum.maps.LatLng(p.y, p.x);
-      const marker = this.addSearchMarker(latlng);
+      const marker = this.addSearchMarker(latlng, p);
 
       daum.maps.event.addListener(marker, 'mouseover', () =>
         this.displayInfoWindow(marker, p.place_name)
@@ -169,11 +177,22 @@ export default class DaumMap extends Component {
       const _latlng = marker.getPosition();
       onMoveMarker && onMoveMarker(index, _latlng.getLat(), _latlng.getLng());
     });
+
+    const {onCreateMarker} = this.props;
+    if(!options.noCallback) {
+      const latlng = marker.getPosition();
+      onCreateMarker && onCreateMarker(
+        this.currentMarker,
+        latlng.getLat(),
+        latlng.getLng(),
+        {name: options.name}
+      );
+    }
   }
 
-  addSearchMarker(latlng) {
+  addSearchMarker(latlng, place) {
     const image = new daum.maps.MarkerImage(
-      'public/images/search-marker.png',
+      'public/images/marker.png',
       new daum.maps.Size(32, 32)
     );
     const marker = this.createMarker({
@@ -181,6 +200,14 @@ export default class DaumMap extends Component {
       draggable: false,
       image
     });
+
+    const {markable} = this.props;
+
+    if(this.props.markable) {
+      daum.maps.event.addListener(marker, 'rightclick', () =>
+        this.addMarker({latlng: marker.getPosition()}, {name: place.place_name})
+      );
+    }
 
     this.searchMarkers.push(marker);
 
@@ -195,40 +222,51 @@ export default class DaumMap extends Component {
   }
 
   render() {
+    const {
+      onCreateMarker,
+      onMoveMarker,
+      markers,
+      markable,
+      searchable,
+      ...attrs
+    } = this.props;
+
     const {keyword, searchResult, searchPagination} = this.state;
 
     return (
-      <div>
+      <div {...attrs}>
         <h3>Daum Map</h3>
         <div ref="mapContainer" style={{height: 500, width: 500, display: 'inline-block'}}></div>
-        <div style={{display: 'inline-block', verticalAlign: 'top'}}>
-          <input
-            type='text'
-            value={keyword}
-            onChange={this.handleChangeKeyword}
-            onKeyPress={this.handlePressKeyOnKeywordInput}
-            />
-          <button onClick={this.handleSearch}>검색</button>
-          <div>
-            {searchResult.map((r,i) =>
-              <div key={`search-result-${i}`} onMouseOver={() => this.handleMouseOverResult(i, r.place_name)}>
-                <div>{r.place_name}</div>
-                <div>{r.road_address_name}</div>
-                <div>{r.address_name}</div>
-                <div>{r.phone}</div>
-              </div>
-            )}
-            {searchPagination &&
-              [...Array(searchPagination.last).keys()].map(i =>
-                <span key={`search-pagination-${i}`}>
-                  <a onClick={() => this.handleChangeSearchResultPage(i+1)} style={{margin: 10}}>
-                    {i + 1}
-                  </a>
-                </span>
-              )
-            }
+        {searchable &&
+          <div style={{display: 'inline-block', verticalAlign: 'top'}}>
+            <input
+              type='text'
+              value={keyword}
+              onChange={this.handleChangeKeyword}
+              onKeyPress={this.handlePressKeyOnKeywordInput}
+              />
+            <button onClick={this.handleSearch}>검색</button>
+            <div>
+              {searchResult.map((r,i) =>
+                <div key={`search-result-${i}`} onMouseOver={() => this.handleMouseOverResult(i, r.place_name)}>
+                  <div>{r.place_name}</div>
+                  <div>{r.road_address_name}</div>
+                  <div>{r.address_name}</div>
+                  <div>{r.phone}</div>
+                </div>
+              )}
+              {searchPagination &&
+                [...Array(searchPagination.last).keys()].map(i =>
+                  <span key={`search-pagination-${i}`}>
+                    <a onClick={() => this.handleChangeSearchResultPage(i+1)} style={{margin: 10}}>
+                      {i + 1}
+                    </a>
+                  </span>
+                )
+              }
+            </div>
           </div>
-        </div>
+        }
       </div>
     )
   }

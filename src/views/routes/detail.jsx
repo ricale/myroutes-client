@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {fetchRoute} from 'actions/routes';
 
 import DaumMap from 'components/map';
+import PlaceList from 'components/PlaceList';
 
 class RouteDetail extends Component {
   constructor(props) {
@@ -60,11 +61,10 @@ class RouteDetail extends Component {
       <div>
         <h2>Route Detail</h2>
         <div>{route.name}</div>
-        {places.map((p, i) =>
-          <div key={`place-${i}`}>{`${p.name}: ${p.latitude},${p.longitude}`}</div>
-        )}
+        <PlaceList places={places} />
         <DaumMap
           markers={places}
+          markable={false}
           onCreateMarker={this.handleCreateMarker}
           onMoveMarker={this.handleMoveMarker}
           />

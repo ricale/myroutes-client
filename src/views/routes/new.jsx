@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {createRoute} from 'actions/routes';
 
 import DaumMap from 'components/map';
+import PlaceList from 'components/PlaceList';
 import RouteForm from './form';
 
 class NewRoute extends Component {
@@ -17,10 +18,12 @@ class NewRoute extends Component {
     this.handleMoveMarker = this.handleMoveMarker.bind(this);
   }
 
-  handleCreateMarker(index, latitude, longitude) {
+  handleCreateMarker(index, latitude, longitude, options = {}) {
     const {places} = this.state;
+    const name = options.name || `place-${index}`;
+
     places[index] = {
-      name: `place-${index}`,
+      name,
       latitude,
       longitude
     };
@@ -41,6 +44,18 @@ class NewRoute extends Component {
     this.setState({places});
   }
 
+  handleChangePlaceName(index, name) {
+    const {places} = this.state;
+
+    if(!places[index]) {
+      return;
+    }
+
+    places[index].name = name;
+
+    this.setState({places});
+  }
+
   handleSubmit(_data) {
     const {createRoute} = this.props;
     const {places} = this.state;
@@ -52,11 +67,20 @@ class NewRoute extends Component {
   }
 
   render() {
+    const {places} = this.state;
+
     return (
       <div>
         <h2>New Route</h2>
         <RouteForm onSubmit={this.handleSubmit} />
+        <PlaceList
+          style={{display: 'inline-block'}}
+          places={places}
+          editable={true}
+          onChangePlaceName={(i, name) => this.handleChangePlaceName(i, name)}
+          />
         <DaumMap
+          style={{display: 'inline-block'}}
           onCreateMarker={this.handleCreateMarker}
           onMoveMarker={this.handleMoveMarker}
           />
