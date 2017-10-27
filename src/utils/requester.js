@@ -13,20 +13,22 @@ function parseJson(response) {
 }
 
 function _fetch(url, actions, options = {}) {
-  const {method, data} = options;
-  const body = data ? JSON.stringify(data) : '';
+  const {method, data, contentType} = options;
+  const body = options.body ||
+    (data ? JSON.stringify(data) : '');
 
   return dispatch => {
     dispatch(actions.request());
 
     const fetchOptions = {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': contentType || 'application/json',
         'Accept-Language': 'ko-kr'
       }
     };
     method && (fetchOptions.method = method);
     body   && (fetchOptions.body   = body);
+    data   && (fetchOptions.data   = data);
 
     return fetch(`http://localhost:5000${url}`, fetchOptions)
       .then(checkStatus)

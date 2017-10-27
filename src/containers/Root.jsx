@@ -6,13 +6,15 @@ import {createStore, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
 import createHistory from 'history/createHashHistory';
 
-import rootReducer from '../reducers';
+import rootReducer from 'reducers';
 
-import App from '../views/App';
-import RouteList   from '../views/routes/list';
-import RouteDetail from '../views/routes/detail';
-import NewRoute    from '../views/routes/new';
-import EditRoute   from '../views/routes/edit';
+import App from 'views/App';
+import RouteList   from 'views/routes/list';
+import RouteDetail from 'views/routes/detail';
+import NewRoute    from 'views/routes/new';
+import EditRoute   from 'views/routes/edit';
+
+import PlaceDetail from 'views/places/detail';
 
 export default class Root extends Component {
   render() {
@@ -38,6 +40,8 @@ export default class Root extends Component {
               <Route path='/routes/new'           exact component={NewRoute} />
               <Route path='/routes/:id(\d+)'      exact component={RouteDetail} />
               <Route path='/routes/:id(\d+)/edit'       component={EditRoute} />
+
+              <Route path='/routes/:routeId/places/:id' exact component={PlaceDetail} />
             </div>
           </div>
         </Router>

@@ -22,10 +22,16 @@ class RouteDetail extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const {route} = this.props;
-    const {route: newRoute} = newProps;
+    const {route, id, fetchRoute} = this.props;
+    const {
+      route: newRoute,
+      id: newId
+    } = newProps;
 
-    if(route.id !== newRoute.id) {
+    if(id !== newId) {
+      fetchRoute(newId);
+
+    } else if(route.id !== newRoute.id) {
       this.setState({places: newRoute.places || []});
     }
   }
@@ -61,7 +67,9 @@ class RouteDetail extends Component {
       <div>
         <h2>Route Detail</h2>
         <div>{route.name}</div>
-        <PlaceList places={places} />
+        <PlaceList
+          places={places}
+          />
         <DaumMap
           markers={places}
           markable={false}

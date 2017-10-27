@@ -31,6 +31,16 @@ export default class DaumMap extends Component {
     }
   }
 
+  componentWillReceiveProps(newProps) {
+    const {markers} = this.props;
+    const {markers: newMarkers} = newProps;
+
+    if(markers !== newMarkers) {
+      this.removeAllMarkers();
+      this.initMarkers(newProps);
+    }
+  }
+
   handleClickMap(mouseEvent) {
     const {onMoveMarker} = this.props;
 
@@ -109,8 +119,8 @@ export default class DaumMap extends Component {
     }
   }
 
-  initMarkers() {
-    const {markers} = this.props;
+  initMarkers(props = this.props) {
+    const {markers} = props;
 
     (markers || []).forEach(m =>
       this.addMarker(m, {noCallback: true})
@@ -212,6 +222,13 @@ export default class DaumMap extends Component {
     this.searchMarkers.push(marker);
 
     return marker;
+  }
+
+  removeAllMarkers() {
+    this.markers.forEach(m =>
+      m.setMap(null)
+    );
+    this.markers = [];    
   }
 
   removeAllSearchMarkers() {

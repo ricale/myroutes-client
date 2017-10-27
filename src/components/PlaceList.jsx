@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+
+import pathHelper from 'utils/pathHelper';
 
 class Place extends Component {
   constructor(props) {
@@ -9,14 +12,16 @@ class Place extends Component {
     const {place, editable, onChangeName} = this.props;
 
     return (
-      <div>
-        <div>
-          {editable && <input onChange={onChangeName} value={place.name} />}
-          {!editable && place.name}
-        </div>
-        <div>{place.address}</div>
-        <div>{place.latitude}</div>
-        <div>{place.longitude}</div>
+      <div style={{padding: 10, backgroundColor: '#EFEFEF', margin: 1}}>
+        <Link to={pathHelper.places.detail(place.route_id, place.id)}>
+          <div>
+            {editable && <input onChange={onChangeName} value={place.name} />}
+            {!editable && place.name}
+          </div>
+          <div>{place.address}</div>
+          <div>{place.latitude}</div>
+          <div>{place.longitude}</div>
+        </Link>
       </div>
     )
   }
