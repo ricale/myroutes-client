@@ -13,15 +13,14 @@ class Place extends Component {
 
     return (
       <div style={{padding: 10, backgroundColor: '#EFEFEF', margin: 1}}>
-        <Link to={pathHelper.places.detail(place.route_id, place.id)}>
-          <div>
-            {editable && <input onChange={onChangeName} value={place.name} />}
-            {!editable && place.name}
-          </div>
-          <div>{place.address}</div>
-          <div>{place.latitude}</div>
-          <div>{place.longitude}</div>
-        </Link>
+        <div>
+          {editable && <input onChange={onChangeName} value={place.name} />}
+          {!editable && place.name}
+        </div>
+        <div>{place.address}</div>
+        <div>{place.latitude}</div>
+        <div>{place.longitude}</div>
+        <Link to={pathHelper.places.detail(place.route_id, place.id)}>상세</Link>
       </div>
     )
   }

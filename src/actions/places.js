@@ -13,6 +13,18 @@ const actions = createActions({
       REQUEST: () => ({}),
       SUCCESS: (response) => ({current: response.data}),
       FAILURE: () => ({})
+    },
+    IMAGES: {
+      CREATE: {
+        REQUEST: () => ({}),
+        SUCCESS: () => ({}),
+        FAILURE: () => ({})
+      },
+      DELETE: {
+        REQUEST: () => ({}),
+        SUCCESS: () => ({}),
+        FAILURE: () => ({})
+      }
     }
   }
 });
@@ -24,10 +36,26 @@ export function fetchPlace(id) {
   );
 }
 
-export function updatePlace(id, body) {
+// export function updatePlace(id, body) {
+//   return requester.fetch(
+//     `/places/${id}`,
+//     actions.places.update,
+//     {method: 'POST', body}
+//   );
+// }
+
+export function addPlaceImage(id, body) {
   return requester.fetch(
-    `/places/${id}`,
-    actions.places.update,
+    `/places/${id}/images`,
+    actions.places.images.create,
     {method: 'POST', body}
+  );
+}
+
+export function deletePlaceImage(imageId) {
+  return requester.fetch(
+    `/place_images/${imageId}`,
+    actions.places.images.delete,
+    {method: 'DELETE'}
   );
 }

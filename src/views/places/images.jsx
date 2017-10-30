@@ -1,30 +1,30 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
 
-import {fetchPlace, deletePlaceImage} from 'actions/places';
-import pathHelper from 'utils/pathHelper'
+import {fetchPlace, addPlaceImage, deletePlaceImage} from 'actions/places';
+
 import PlaceImage from 'components/PlaceImage';
 
-class PlaceDetail extends Component {
+class PlaceImages extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      images: []
-    };
+    this.handleChangeFile = this.handleChangeFile.bind(this);
   }
+
   componentDidMount() {
-    const {fetchPlace, id} = this.props;
-    fetchPlace(id);
+    const {fetchPlace, placeId} = this.props;
+    fetchPlace(placeId);
   }
 
-  componentWillReceiveProps(newProps) {
-    const {id, fetchPlace} = this.props;
-    const {id: newId} = newProps;
+  handleChangeFile(event) {
+    const {addPlaceImage, fetchPlace, placeId} = this.props;
 
-    if(id !== newId) {
-      fetchPlace(newId);
-    }
+    const fd = new FormData();
+    fd.append('file', this.refs.file.files[0]);
+
+    addPlaceImage(placeId, fd).then(() =>
+      fetchPlace(placeId)
+    );
   }
 
   handleClickDeleteImage(imageId) {
@@ -39,14 +39,13 @@ class PlaceDetail extends Component {
 
   render() {
     const {place} = this.props;
+
     return (
       <div>
         <h2>Place Detail</h2>
-        <div>{place.name}</div>
-        <div>{place.latitude}</div>
-        <div>{place.longitude}</div>
+        <div>{place.name}</div>        
 
-        <Link to={pathHelper.placeImages.new(place.id)}>이미지 추가</Link>
+        <input ref='file' type='file' name='file' onChange={this.handleChangeFile}/>
 
         {(place.images || []).map(img =>
           <PlaceImage
@@ -62,7 +61,7 @@ class PlaceDetail extends Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    id: ownProps.match.params.id,
+    placeId: ownProps.match.params.placeId,
     place: state.places.current
   };
 }
@@ -71,9 +70,11 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchPlace: (...args) =>
       dispatch(fetchPlace(...args)),
+    addPlaceImage: (...args) =>
+      dispatch(addPlaceImage(...args)),
     deletePlaceImage: (...args) =>
       dispatch(deletePlaceImage(...args)),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaceDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(PlaceImages);

@@ -16,6 +16,8 @@ import EditRoute   from 'views/routes/edit';
 
 import PlaceDetail from 'views/places/detail';
 
+import PlaceImages from 'views/places/images'
+
 export default class Root extends Component {
   render() {
     const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -42,6 +44,8 @@ export default class Root extends Component {
               <Route path='/routes/:id(\d+)/edit'       component={EditRoute} />
 
               <Route path='/routes/:routeId/places/:id' exact component={PlaceDetail} />
+
+              <Route path='/places/:placeId/images' exact component={PlaceImages} />
             </div>
           </div>
         </Router>

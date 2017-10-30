@@ -6,6 +6,9 @@ export default {
     edit:   (id) => `/routes/${id}/edit`,
   },
   places: {
-    detail: (routeId, id) => `/routes/${routeId}/places/${id}`
+    detail: (routeId, id) => `/routes/${routeId}/places/${id}`,
+  },
+  placeImages: {
+    new: (placeId) => `/places/${placeId}/images`
   }
 };
