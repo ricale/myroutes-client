@@ -12,6 +12,7 @@ class PlaceImages extends Component {
   }
 
   componentDidMount() {
+    console.log('PlaceImages componentDidMount');
     const {fetchPlace, placeId} = this.props;
     fetchPlace(placeId);
   }

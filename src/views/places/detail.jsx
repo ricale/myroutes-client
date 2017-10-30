@@ -14,6 +14,7 @@ class PlaceDetail extends Component {
     };
   }
   componentDidMount() {
+    console.log('PlaceDetail componentDidMount');
     const {fetchPlace, id} = this.props;
     fetchPlace(id);
   }

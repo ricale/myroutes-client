@@ -10,6 +10,9 @@ export default class RouteForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+  }
+
   handleChangeName(event) {
     const name = event.target.value;
     this.setState({name}, () => {

@@ -9,14 +9,10 @@ import PlaceList from 'components/PlaceList';
 class RouteDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      places: []
-    };
-    this.handleCreateMarker = this.handleCreateMarker.bind(this);
-    this.handleMoveMarker = this.handleMoveMarker.bind(this);
   }
 
   componentDidMount() {
+    console.log('RouteDetail componentDidMount');
     const {fetchRoute, id} = this.props;
     fetchRoute(id);
   }
@@ -36,28 +32,8 @@ class RouteDetail extends Component {
     }
   }
 
-  handleCreateMarker(index, latitude, longitude) {
-    const {places} = this.state;
-    places[index] = {
-      name: `place-${index}`,
-      latitude,
-      longitude
-    };
-
-    this.setState({places});
-  }
-
-  handleMoveMarker(index, latitude, longitude) {
-    const {places} = this.state;
-    places[index].latitude = latitude;
-    places[index].longitude = longitude;
-
-    this.setState({places});
-  }
-
   render() {
     const {route} = this.props;
-    const {places} = this.state;
 
     if(!route || !route.id) {
       return <div></div>
@@ -68,13 +44,11 @@ class RouteDetail extends Component {
         <h2>Route Detail</h2>
         <div>{route.name}</div>
         <PlaceList
-          places={places}
+          places={route.places}
           />
         <DaumMap
-          markers={places}
+          markers={route.places}
           markable={false}
-          onCreateMarker={this.handleCreateMarker}
-          onMoveMarker={this.handleMoveMarker}
           />
       </div>
     );

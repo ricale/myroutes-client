@@ -7,7 +7,7 @@ import pathHelper from 'utils/pathHelper'
 
 class RouteList extends Component {
   componentDidMount() {
-    console.log('componentDidMount')
+    console.log('RouteList componentDidMount');
     this.props.fetchRouteList();
   }
 

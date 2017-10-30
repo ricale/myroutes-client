@@ -18,6 +18,10 @@ class NewRoute extends Component {
     this.handleMoveMarker = this.handleMoveMarker.bind(this);
   }
 
+  componentDidMount() {
+    console.log('NewRoute componentDidMount');
+  }
+
   handleCreateMarker(index, latitude, longitude, options = {}) {
     const {places} = this.state;
     const name = options.name || `place-${index}`;

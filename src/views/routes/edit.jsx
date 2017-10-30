@@ -12,6 +12,7 @@ class EditRoute extends Component {
   }
 
   componentDidMount() {
+    console.log('EditRoute componentDidMount');
     const {fetchRoute, id} = this.props;
 
     fetchRoute(id);
