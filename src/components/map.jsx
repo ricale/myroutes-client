@@ -126,7 +126,7 @@ export default class DaumMap extends Component {
     const bounds = new daum.maps.LatLngBounds();
 
     (markers || []).forEach(m => {
-      this.addMarker(m, {noCallback: true});
+      this.addMarker(m, {noCallback: true, name: m.name});
       bounds.extend(this.markers[this.currentMarker].getPosition());
     });
 
@@ -196,6 +196,26 @@ export default class DaumMap extends Component {
       onMoveMarker && onMoveMarker(index, _latlng.getLat(), _latlng.getLng());
     });
 
+    daum.maps.event.addListener(marker, 'mouseover', () =>
+      this.displayInfoWindow(marker, options.name)
+    );
+
+    daum.maps.event.addListener(marker, 'mouseout', () =>
+      this.infoWindow.close()
+    );
+
+    daum.maps.event.addListener(marker, 'rightclick', () => {
+      const i = this.markers.indexOf(marker);
+      if(i !== -1) {
+        this.markers.splice(i, 1);
+        marker.setMap(null);
+        this.infoWindow.close();
+
+        const {onDeleteMarker} = this.props;
+        onDeleteMarker && onDeleteMarker(i);
+      }
+    });
+
     const {onCreateMarker} = this.props;
     if(!options.noCallback) {
       const latlng = marker.getPosition();
@@ -233,15 +253,15 @@ export default class DaumMap extends Component {
   }
 
   removeAllMarkers() {
-    this.markers.forEach(m =>
-      m.setMap(null)
+    this.markers.forEach(marker =>
+      marker.setMap(null)
     );
     this.markers = [];    
   }
 
   removeAllSearchMarkers() {
-    this.searchMarkers.forEach(m =>
-      m.setMap(null)
+    this.searchMarkers.forEach(marker =>
+      marker.setMap(null)
     );
     this.searchMarkers = [];
   }
@@ -250,6 +270,7 @@ export default class DaumMap extends Component {
     const {
       onCreateMarker,
       onMoveMarker,
+      onDeleteMarker,
       markers,
       markable,
       searchable,

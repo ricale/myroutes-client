@@ -4,8 +4,7 @@ import {Link} from 'react-router-dom';
 
 import {fetchRoute} from 'actions/routes';
 
-import DaumMap from 'components/map';
-import PlaceList from 'components/PlaceList';
+import PlaceMap from 'components/PlaceMap';
 import pathHelper from 'utils/pathHelper';
 
 class RouteDetail extends Component {
@@ -46,10 +45,8 @@ class RouteDetail extends Component {
         <h2>Route Detail</h2>
         <div>{route.name}</div>
         <Link to={pathHelper.routes.edit(route.id)}>수정</Link>
-        <PlaceList
+        <PlaceMap
           places={route.places}
-          />
-        <DaumMap
           markers={route.places}
           markable={false}
           />

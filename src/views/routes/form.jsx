@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 
-import DaumMap from 'components/map';
-import PlaceList from 'components/PlaceList';
+import PlaceMap from 'components/PlaceMap';
 
 export default class RouteForm extends Component {
   constructor(props) {
@@ -13,6 +12,7 @@ export default class RouteForm extends Component {
     this.handleChangeName = this.handleChangeName.bind(this);
     this.handleCreateMarker = this.handleCreateMarker.bind(this);
     this.handleMoveMarker = this.handleMoveMarker.bind(this);
+    this.handleDeleteMarker = this.handleDeleteMarker.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -53,6 +53,18 @@ export default class RouteForm extends Component {
     this.setState({places});
   }
 
+  handleDeleteMarker(index) {
+    const {places} = this.state;
+
+    if(!places[index]) {
+      return;
+    }
+
+    places.splice(index, 1);
+
+    this.setState({places});
+  }
+
   handleChangePlaceName(index, name) {
     const {places} = this.state;
 
@@ -89,18 +101,15 @@ export default class RouteForm extends Component {
             />
         </div>
 
-        <PlaceList
-          style={{display: 'inline-block'}}
+        <PlaceMap
           places={places}
+          initialMarkers={initialPlaces}
+
           editable={true}
           onChangePlaceName={(i, name) => this.handleChangePlaceName(i, name)}
-          />
-
-        <DaumMap
-          style={{display: 'inline-block'}}
-          initialMarkers={initialPlaces}
           onCreateMarker={this.handleCreateMarker}
           onMoveMarker={this.handleMoveMarker}
+          onDeleteMarker={this.handleDeleteMarker}
           />
 
         <div>
