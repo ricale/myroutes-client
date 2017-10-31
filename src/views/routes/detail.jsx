@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import {push} from 'react-router-redux';
 
-import {fetchRoute} from 'actions/routes';
+import {fetchRoute, deleteRoute} from 'actions/routes';
 
 import PlaceMap from 'components/PlaceMap';
 import pathHelper from 'utils/pathHelper';
@@ -10,6 +11,7 @@ import pathHelper from 'utils/pathHelper';
 class RouteDetail extends Component {
   constructor(props) {
     super(props);
+    this.handleClickDelete = this.handleClickDelete.bind(this);
   }
 
   componentDidMount() {
@@ -33,6 +35,14 @@ class RouteDetail extends Component {
     }
   }
 
+  handleClickDelete(event) {
+    event.preventDefault();
+    const {deleteRoute, goToList, id} = this.props;
+    deleteRoute(id).then(() =>
+      goToList()
+    );
+  }
+
   render() {
     const {route} = this.props;
 
@@ -45,6 +55,7 @@ class RouteDetail extends Component {
         <h2>Route Detail</h2>
         <div>{route.name}</div>
         <Link to={pathHelper.routes.edit(route.id)}>수정</Link>
+        <a href='#' onClick={this.handleClickDelete}>삭제</a>
         <PlaceMap
           places={route.places}
           markers={route.places}
@@ -65,7 +76,11 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchRoute: (...args) =>
-      dispatch(fetchRoute(...args))
+      dispatch(fetchRoute(...args)),
+    deleteRoute: (...args) =>
+      dispatch(deleteRoute(...args)),
+    goToList: (...args) =>
+      dispatch(push(pathHelper.routes.list()))
   };
 }
 

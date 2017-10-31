@@ -16,7 +16,6 @@ export default class DaumMap extends Component {
 
     this.markers = [];
     this.searchMarkers = [];
-    this.handleClickMap = this.handleClickMap.bind(this);
     this.handleRightClickMap = this.handleRightClickMap.bind(this);
     this.handleChangeKeyword = this.handleChangeKeyword.bind(this);
     this.handlePressKeyOnKeywordInput = this.handlePressKeyOnKeywordInput.bind(this);
@@ -41,18 +40,6 @@ export default class DaumMap extends Component {
     if(markers !== newMarkers) {
       this.removeAllMarkers();
       this.initMarkers(newProps.markers);
-    }
-  }
-
-  handleClickMap(mouseEvent) {
-    const {onMoveMarker} = this.props;
-
-    const latlng = mouseEvent.latLng;
-    const currentMarker = this.markers[this.currentMarker];
-
-    if(currentMarker) {
-      currentMarker.setPosition(latlng);
-      onMoveMarker && onMoveMarker(this.currentMarker, latlng.getLat(), latlng.getLng());
     }
   }
 
@@ -117,7 +104,6 @@ export default class DaumMap extends Component {
     });
 
     if(markable) {
-      daum.maps.event.addListener(this.map, 'click',      this.handleClickMap);
       daum.maps.event.addListener(this.map, 'rightclick', this.handleRightClickMap);
     }
   }

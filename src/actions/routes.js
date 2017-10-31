@@ -1,6 +1,6 @@
 import {createActions} from 'redux-actions';
 import {normalize} from 'normalizr';
-import requester from '../utils/requester';
+import requester from 'utils/requester';
 
 const actions = createActions({
   ROUTES: {
@@ -20,6 +20,11 @@ const actions = createActions({
       FAILURE: () => ({})
     },
     UPDATE: {
+      REQUEST: () => ({}),
+      SUCCESS: () => ({}),
+      FAILURE: () => ({})
+    },
+    DELETE: {
       REQUEST: () => ({}),
       SUCCESS: () => ({}),
       FAILURE: () => ({})
@@ -54,5 +59,13 @@ export function updateRoute(id, data) {
     `/routes/${id}`,
     actions.routes.update,
     {method: 'PUT', data}
-  )
+  );
+}
+
+export function deleteRoute(id) {
+  return requester.fetch(
+    `/routes/${id}`,
+    actions.routes.delete,
+    {method: 'DELETE'}
+  );
 }

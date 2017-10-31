@@ -19,7 +19,6 @@ class NewRoute extends Component {
 
   handleSubmit(data) {
     const {createRoute, goToDetail} = this.props;
-    console.log('data', data);
     createRoute(data).then(action =>
       goToDetail(action.payload.id)
     );
