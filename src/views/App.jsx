@@ -1,26 +1,23 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
+
+import LoadingIndicator from 'components/LoadingIndicator';
+import pathHelper from 'utils/pathHelper'
 
 class App extends Component {
   render() {
     const {loading} = this.props;
 
-    const display = loading ? 'block' : 'none';
-
     return (
       <div>
         <h1>App</h1>
+        <ul>
+          <li><Link to={pathHelper.routes.new()}>New Route</Link></li>
+          <li><Link to={pathHelper.routes.list()}>Route List</Link></li>
+        </ul>
 
-        <div style={{
-          display,
-          backgroundColor: 'white',
-          opacity: 0.75,
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%'
-        }}></div>
+        <LoadingIndicator show={loading} />
       </div>
     );
   }

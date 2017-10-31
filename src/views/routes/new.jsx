@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {push} from 'react-router-redux';
 
 import {createRoute} from 'actions/routes';
 
 import DaumMap from 'components/map';
 import PlaceList from 'components/PlaceList';
+import pathHelper from 'utils/pathHelper'
 import RouteForm from './form';
 
 class NewRoute extends Component {
@@ -61,12 +63,12 @@ class NewRoute extends Component {
   }
 
   handleSubmit(_data) {
-    const {createRoute} = this.props;
+    const {createRoute, goToDetail} = this.props;
     const {places} = this.state;
     const data = Object.assign({places}, _data);
 
-    createRoute(data).then((...args) =>
-      console.log('1', args)
+    createRoute(data).then(action =>
+      goToDetail(action.payload.id)
     );
   }
 
@@ -100,7 +102,11 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     createRoute: (...args) =>
-      dispatch(createRoute(...args))
+      dispatch(createRoute(...args)),
+    goToDetail: (...args) =>
+      dispatch(push(pathHelper.routes.detail(
+        ...args
+      )))
   }
 }
 

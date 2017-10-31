@@ -16,7 +16,7 @@ const actions = createActions({
     },
     CREATE: {
       REQUEST: () => ({}),
-      SUCCESS: () => ({}),
+      SUCCESS: (response) => ({id: response.data.id}),
       FAILURE: () => ({})
     },
     UPDATE: {

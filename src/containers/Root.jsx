@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Router, Route} from 'react-router';
-import {syncHistoryWithStore} from 'react-router-redux';
+import {routerMiddleware} from 'react-router-redux';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
@@ -21,15 +21,17 @@ import PlaceImages from 'views/places/images'
 export default class Root extends Component {
   render() {
     const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+    const history = createHistory();
     const store = createStore(
       rootReducer,
       {}, // preloadedState
       composeEnhancers(
-        applyMiddleware(thunk)
+        applyMiddleware(
+          thunk,
+          routerMiddleware(history)
+        )
       )
     );
-
-    const history = createHistory();
 
     return (
       <Provider store={store}>
