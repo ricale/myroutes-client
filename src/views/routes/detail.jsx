@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 
 import {fetchRoute} from 'actions/routes';
 
 import DaumMap from 'components/map';
 import PlaceList from 'components/PlaceList';
+import pathHelper from 'utils/pathHelper';
 
 class RouteDetail extends Component {
   constructor(props) {
@@ -43,6 +45,7 @@ class RouteDetail extends Component {
       <div>
         <h2>Route Detail</h2>
         <div>{route.name}</div>
+        <Link to={pathHelper.routes.edit(route.id)}>수정</Link>
         <PlaceList
           places={route.places}
           />

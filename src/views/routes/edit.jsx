@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {push} from 'react-router-redux';
 
 import {fetchRoute, updateRoute} from 'actions/routes';
 
+import pathHelper from 'utils/pathHelper';
 import RouteForm from './form';
 
 class EditRoute extends Component {
@@ -19,9 +21,9 @@ class EditRoute extends Component {
   }
 
   handleSubmit(data) {
-    const {updateRoute, id} = this.props;
+    const {updateRoute, goToDetail, id} = this.props;
     updateRoute(id, data).then(() => {
-
+      goToDetail(id)
     });
   }
 
@@ -40,6 +42,7 @@ class EditRoute extends Component {
         {this.hasRoute() &&
           <RouteForm
             route={route}
+            initialPlaces={route.places}
             onSubmit={this.handleSubmit} />
         }
       </div>
@@ -59,7 +62,11 @@ function mapDispatchToProps(dispatch) {
     fetchRoute: (...args) =>
       dispatch(fetchRoute(...args)),
     updateRoute: (...args) =>
-      dispatch(updateRoute(...args))
+      dispatch(updateRoute(...args)),
+    goToDetail: (...args) =>
+      dispatch(push(pathHelper.routes.detail(
+        ...args
+      )))
   };
 }
 

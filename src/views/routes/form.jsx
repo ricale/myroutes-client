@@ -1,12 +1,18 @@
 import React, {Component} from 'react';
 
+import DaumMap from 'components/map';
+import PlaceList from 'components/PlaceList';
+
 export default class RouteForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       name: (props.route || {}).name || '',
+      places: props.initialPlaces || []
     };
     this.handleChangeName = this.handleChangeName.bind(this);
+    this.handleCreateMarker = this.handleCreateMarker.bind(this);
+    this.handleMoveMarker = this.handleMoveMarker.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -21,26 +27,85 @@ export default class RouteForm extends Component {
     });
   }
 
+  handleCreateMarker(index, latitude, longitude, options = {}) {
+    const {places} = this.state;
+    const name = options.name || `place-${index}`;
+
+    places[index] = {
+      name,
+      latitude,
+      longitude
+    };
+
+    this.setState({places});
+  }
+
+  handleMoveMarker(index, latitude, longitude) {
+    const {places} = this.state;
+
+    if(!places[index]) {
+      return;
+    }
+
+    places[index].latitude = latitude;
+    places[index].longitude = longitude;
+
+    this.setState({places});
+  }
+
+  handleChangePlaceName(index, name) {
+    const {places} = this.state;
+
+    if(!places[index]) {
+      return;
+    }
+
+    places[index].name = name;
+
+    this.setState({places});
+  }
+
   handleSubmit() {
     const {onSubmit} = this.props;
-    const {name} = this.state;
+    const {name, places} = this.state;
+    const data = {name, places};
 
-    onSubmit && onSubmit({name});
+    onSubmit && onSubmit(data);
   }
 
   render() {
-    const {name, onSubmit} = this.state;
+    const {initialPlaces} = this.props;
+    const {name, places} = this.state;
 
     return (
       <div>
-        <input
-          name='name'
-          type='text'
-          value={name}
-          onChange={this.handleChangeName}
+        <div>
+          <label>이름</label>
+          <input
+            name='name'
+            type='text'
+            value={name}
+            onChange={this.handleChangeName}
+            />
+        </div>
+
+        <PlaceList
+          style={{display: 'inline-block'}}
+          places={places}
+          editable={true}
+          onChangePlaceName={(i, name) => this.handleChangePlaceName(i, name)}
           />
 
-        <button onClick={this.handleSubmit}>저장</button>
+        <DaumMap
+          style={{display: 'inline-block'}}
+          initialMarkers={initialPlaces}
+          onCreateMarker={this.handleCreateMarker}
+          onMoveMarker={this.handleMoveMarker}
+          />
+
+        <div>
+          <button onClick={this.handleSubmit}>저장</button>
+        </div>
       </div>
     ) 
   }

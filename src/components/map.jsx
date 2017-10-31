@@ -10,7 +10,8 @@ export default class DaumMap extends Component {
     super(props);
     this.state = {
       keyword: '',
-      searchResult: []
+      searchResult: [],
+      initialMarkers: undefined
     };
 
     this.markers = [];
@@ -23,8 +24,10 @@ export default class DaumMap extends Component {
   }
 
   componentDidMount() {
+    const {initialMarkers, markers} = this.props;
+
     this.initMap();
-    this.initMarkers();
+    this.initMarkers(initialMarkers || markers);
 
     if(this.props.searchable) {
       this.initSearcher();
@@ -37,7 +40,7 @@ export default class DaumMap extends Component {
 
     if(markers !== newMarkers) {
       this.removeAllMarkers();
-      this.initMarkers(newProps);
+      this.initMarkers(newProps.markers);
     }
   }
 
@@ -119,12 +122,17 @@ export default class DaumMap extends Component {
     }
   }
 
-  initMarkers(props = this.props) {
-    const {markers} = props;
+  initMarkers(markers = this.props.markers) {
+    const bounds = new daum.maps.LatLngBounds();
 
-    (markers || []).forEach(m =>
-      this.addMarker(m, {noCallback: true})
-    );
+    (markers || []).forEach(m => {
+      this.addMarker(m, {noCallback: true});
+      bounds.extend(this.markers[this.currentMarker].getPosition());
+    });
+
+    if(!bounds.isEmpty()) {
+      this.map.setBounds(bounds);
+    }
   }
 
   initSearcher() {
@@ -245,6 +253,7 @@ export default class DaumMap extends Component {
       markers,
       markable,
       searchable,
+      initialMarkers,
       ...attrs
     } = this.props;
 
