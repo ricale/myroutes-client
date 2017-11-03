@@ -5,6 +5,8 @@ import {Link} from 'react-router-dom';
 import {fetchRouteList} from 'actions/routes'
 import pathHelper from 'utils/pathHelper'
 
+import './list.less';
+
 class RouteList extends Component {
   componentDidMount() {
     console.log('RouteList componentDidMount');
@@ -15,15 +17,18 @@ class RouteList extends Component {
     const {routes} = this.props;
 
     return (
-      <div>
+      <div className='route-list'>
         <h2>Route List</h2>
-        {(routes || []).map(r =>
-          <div key={`route-${r.id}`}>
+        <ul>
+          <li className='route-list__header'>이름</li>
+          {(routes || []).map(r =>
             <Link to={pathHelper.routes.detail(r.id)}>
-              id: {r.id} name: {r.name}
+              <li key={`route-${r.id}`} className='route-list__route'>
+                  {r.name}
+              </li>
             </Link>
-          </div>
-        )}
+          )}
+        </ul>
       </div>
     );
   }

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import './map.less';
+
 export default class DaumMap extends Component {
   static defaultProps = {
     markable: true,
@@ -102,6 +104,11 @@ export default class DaumMap extends Component {
       center: new daum.maps.LatLng(37.563115650880825, 126.96517864826323),
       level: 4
     });
+
+    this.map.addControl(
+      new daum.maps.ZoomControl(),
+      daum.maps.ControlPosition.RIGHT
+    );
 
     if(markable) {
       daum.maps.event.addListener(this.map, 'rightclick', this.handleRightClickMap);
@@ -254,6 +261,7 @@ export default class DaumMap extends Component {
 
   render() {
     const {
+      className,
       onCreateMarker,
       onMoveMarker,
       onDeleteMarker,
@@ -267,39 +275,46 @@ export default class DaumMap extends Component {
     const {keyword, searchResult, searchPagination} = this.state;
 
     return (
-      <div {...attrs}>
-        <h3>Daum Map</h3>
-        <div style={{display: 'inline-block'}}>
-          <div ref="mapContainer" style={{height: 500, width: 500, display: 'inline-block'}}></div>
+      <div {...attrs} className={`map ${className}`}>
+        <div className='map__map-wrapper'>
+          <div ref="mapContainer" className='map__map-container'></div>
           <p>빈 곳에 우클릭: 장소 생성, 장소 우클릭: 장소 삭제</p>
         </div>
         {searchable &&
-          <div style={{display: 'inline-block', verticalAlign: 'top'}}>
+          <div className='map__search-container'>
             <input
               type='text'
               value={keyword}
               onChange={this.handleChangeKeyword}
               onKeyPress={this.handlePressKeyOnKeywordInput}
+              className='map__search-input'
               />
-            <button onClick={this.handleSearch}>검색</button>
-            <div>
-              {searchResult.map((r,i) =>
-                <div key={`search-result-${i}`} onMouseOver={() => this.handleMouseOverResult(i, r.place_name)}>
-                  <div>{r.place_name}</div>
-                  <div>{r.road_address_name}</div>
-                  <div>{r.address_name}</div>
-                  <div>{r.phone}</div>
-                </div>
-              )}
-              {searchPagination &&
-                [...Array(searchPagination.last).keys()].map(i =>
-                  <span key={`search-pagination-${i}`}>
-                    <a onClick={() => this.handleChangeSearchResultPage(i+1)} style={{margin: 10}}>
-                      {i + 1}
-                    </a>
-                  </span>
-                )
-              }
+            <button onClick={this.handleSearch} className='map__search-button'>검색</button>
+            <div className='map__search-result'>
+              <ul>
+                {searchResult.map((r,i) =>
+                  <li
+                    className='map__search-result-item'
+                    key={`search-result-${i}`}
+                    onMouseOver={() => this.handleMouseOverResult(i, r.place_name)}>
+                    <div className='search-result-item__name'>{r.place_name}</div>
+                    <div className='search-result-item__address'>{r.road_address_name}</div>
+                    <div className='search-result-item__address'>{r.address_name}</div>
+                    <div className='search-result-item__phone'>{r.phone}</div>
+                  </li>
+                )}
+              </ul>
+              <ul>
+                {searchPagination &&
+                  [...Array(searchPagination.last).keys()].map(i =>
+                    <li className='map__search-pagination-item' key={`search-pagination-${i}`}>
+                      <a onClick={() => this.handleChangeSearchResultPage(i+1)} style={{margin: 10}}>
+                        {i + 1}
+                      </a>
+                    </li>
+                  )
+                }
+              </ul>
             </div>
           </div>
         }

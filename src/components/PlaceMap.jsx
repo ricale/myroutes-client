@@ -3,16 +3,16 @@ import React, {Component} from 'react';
 import DaumMap from 'components/map';
 import PlaceList from 'components/PlaceList';
 
+import './PlaceMap.less';
+
 export default class PlaceMap extends Component {
   static defaultProps = {
-    listStyle: {display: 'inline-block'},
-    mapStyle: {display: 'inline-block'},
-
     editable: true,
   };
 
   render() {
     const {
+      className,
       places,
       initialPlaces,
 
@@ -29,8 +29,9 @@ export default class PlaceMap extends Component {
     } = this.props;
 
     return (
-      <div>
+      <div className={className || 'place-map'}>
         <PlaceList
+          className='place-map__place-list'
           style={listStyle}
           places={places}
           editable={editable}
@@ -38,6 +39,7 @@ export default class PlaceMap extends Component {
           />
 
         <DaumMap
+          className='place-map__map'
           markers={places}
           style={mapStyle}
           initialMarkers={initialPlaces}

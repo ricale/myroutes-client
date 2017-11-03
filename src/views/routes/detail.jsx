@@ -8,6 +8,8 @@ import {fetchRoute, deleteRoute} from 'actions/routes';
 import PlaceMap from 'components/PlaceMap';
 import pathHelper from 'utils/pathHelper';
 
+import './detail.less';
+
 class RouteDetail extends Component {
   constructor(props) {
     super(props);
@@ -51,11 +53,12 @@ class RouteDetail extends Component {
     }
 
     return (
-      <div>
-        <h2>Route Detail</h2>
-        <div>{route.name}</div>
-        <Link to={pathHelper.routes.edit(route.id)}>수정</Link>
-        <a href='#' onClick={this.handleClickDelete}>삭제</a>
+      <div className='route-detail'>
+        <h2 className='route-detail__name'>{route.name}</h2>
+        <ul className='route-detail__menu'>
+          <li><Link to={pathHelper.routes.edit(route.id)}>수정</Link></li>
+          <li><a href='#' onClick={this.handleClickDelete}>삭제</a></li>
+        </ul>
         <PlaceMap
           places={route.places}
           markers={route.places}

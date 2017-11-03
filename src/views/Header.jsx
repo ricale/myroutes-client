@@ -5,16 +5,17 @@ import {Link} from 'react-router-dom';
 import LoadingIndicator from 'components/LoadingIndicator';
 import pathHelper from 'utils/pathHelper'
 
-class App extends Component {
+import './Header.less';
+
+class Header extends Component {
   render() {
     const {loading} = this.props;
 
     return (
-      <div>
-        <h1>App</h1>
-        <ul>
+      <div className='header'>
+        <h1><Link to={pathHelper.routes.list()}>myroutes</Link></h1>
+        <ul className='header__menu'>
           <li><Link to={pathHelper.routes.new()}>New Route</Link></li>
-          <li><Link to={pathHelper.routes.list()}>Route List</Link></li>
         </ul>
 
         <LoadingIndicator show={loading} />
@@ -29,4 +30,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps)(App)
+export default connect(mapStateToProps)(Header)

@@ -8,7 +8,7 @@ import createHistory from 'history/createHashHistory';
 
 import rootReducer from 'reducers';
 
-import App from 'views/App';
+import Header from 'views/Header';
 import RouteList   from 'views/routes/list';
 import RouteDetail from 'views/routes/detail';
 import NewRoute    from 'views/routes/new';
@@ -37,7 +37,7 @@ export default class Root extends Component {
       <Provider store={store}>
         <Router history={history}>
           <div>
-            <Route path='/' component={App} />
+            <Route path='/' component={Header} />
 
             <div className='contents'>
               <Route path='/routes'               exact component={RouteList} />

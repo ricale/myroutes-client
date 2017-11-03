@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import numeral from 'numeral';
 
 import pathHelper from 'utils/pathHelper';
+
+import './placeList.less'
 
 class Place extends Component {
   constructor(props) {
@@ -12,14 +15,13 @@ class Place extends Component {
     const {place, editable, onChangeName} = this.props;
 
     return (
-      <div style={{padding: 10, backgroundColor: '#EFEFEF', margin: 1}}>
-        <div>
+      <div className='place-list__place'>
+        <div className='place-list__place-name'>
           {editable && <input onChange={onChangeName} value={place.name} />}
           {!editable && place.name}
         </div>
-        <div>{place.address}</div>
-        <div>{place.latitude}</div>
-        <div>{place.longitude}</div>
+        <div className='place-list__place-address'>{place.address}</div>
+        <div className='place-list__place-position'>{`${numeral(place.latitude).format('0.000')},${numeral(place.longitude).format('0.000')}`}</div>
         <Link to={pathHelper.places.detail(place.route_id, place.id)}>상세</Link>
       </div>
     )
@@ -28,9 +30,9 @@ class Place extends Component {
 
 export default class PlaceList extends Component {
   render() {
-    const {places, editable, onChangePlaceName, ...attrs} = this.props;
+    const {places, editable, onChangePlaceName, className, ...attrs} = this.props;
     return (
-      <div {...attrs}>
+      <div {...attrs} className={`place-list ${className}`}>
         {(places || []).map((p,i) => 
           <Place
             key={`place-${i}`}
