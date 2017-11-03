@@ -6,7 +6,9 @@ import PlaceList from 'components/PlaceList';
 export default class PlaceMap extends Component {
   static defaultProps = {
     listStyle: {display: 'inline-block'},
-    mapStyle: {display: 'inline-block'}
+    mapStyle: {display: 'inline-block'},
+
+    editable: true,
   };
 
   render() {
@@ -31,7 +33,7 @@ export default class PlaceMap extends Component {
         <PlaceList
           style={listStyle}
           places={places}
-          editable={true}
+          editable={editable}
           onChangePlaceName={onChangePlaceName}
           />
 

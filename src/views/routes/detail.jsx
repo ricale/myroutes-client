@@ -60,6 +60,7 @@ class RouteDetail extends Component {
           places={route.places}
           markers={route.places}
           markable={false}
+          editable={false}
           />
       </div>
     );

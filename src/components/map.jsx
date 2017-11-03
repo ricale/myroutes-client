@@ -269,7 +269,10 @@ export default class DaumMap extends Component {
     return (
       <div {...attrs}>
         <h3>Daum Map</h3>
-        <div ref="mapContainer" style={{height: 500, width: 500, display: 'inline-block'}}></div>
+        <div style={{display: 'inline-block'}}>
+          <div ref="mapContainer" style={{height: 500, width: 500, display: 'inline-block'}}></div>
+          <p>빈 곳에 우클릭: 장소 생성, 장소 우클릭: 장소 삭제</p>
+        </div>
         {searchable &&
           <div style={{display: 'inline-block', verticalAlign: 'top'}}>
             <input

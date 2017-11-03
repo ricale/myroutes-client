@@ -20,20 +20,38 @@ class PlaceImages extends Component {
   handleChangeFile(event) {
     const {addPlaceImage, fetchPlace, placeId} = this.props;
 
-    const fd = new FormData();
-    fd.append('file', this.refs.file.files[0]);
+    const files = this.refs.file.files;
+    const fileLength = files.length;
+    const createImage = (i) => {
+      const fd = new FormData();
+      fd.append('file', files[i]);
 
-    addPlaceImage(placeId, fd).then(() =>
-      fetchPlace(placeId)
-    );
+      addPlaceImage(placeId, fd).then(() =>
+        fetchPlace(placeId)
+      );
+    }
+
+
+    const repeat = (times, i = 0) => {
+      return (func) => {
+        return (...args) => {
+          if(times > 0) {
+            func(i, ...args);
+            repeat(times - 1, i + 1)(func)(...args);
+          }
+        }
+      }
+    }
+
+    repeat(fileLength)(createImage)(files);
   }
 
   handleClickDeleteImage(imageId) {
     return (event) => {
       event.preventDefault();
-      const {deletePlaceImage, fetchPlace, id} = this.props;
+      const {deletePlaceImage, fetchPlace, placeId} = this.props;
       deletePlaceImage(imageId).then(() =>
-        fetchPlace(id)
+        fetchPlace(placeId)
       )
     }
   }
@@ -46,7 +64,7 @@ class PlaceImages extends Component {
         <h2>Place Detail</h2>
         <div>{place.name}</div>        
 
-        <input ref='file' type='file' name='file' onChange={this.handleChangeFile}/>
+        <input ref='file' type='file' name='file' multiple='true' onChange={this.handleChangeFile}/>
 
         {(place.images || []).map(img =>
           <PlaceImage
