@@ -2,6 +2,8 @@
   "author": "kim.kangseong@gmail.com",
   "license": "MIT",
   "dependencies": {
+    "exif-js": "^2.3.0",
+    "exif2css": "^1.2.0",
     "font-awesome": "^4.7.0",
     "howler": "^2.0.3",
     "normalizr": "^3.2.2",

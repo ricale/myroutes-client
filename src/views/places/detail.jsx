@@ -79,7 +79,13 @@ class PlaceDetail extends Component {
         <div className='place-detail__position'>{`${numeral(place.latitude).format('0.000')},${numeral(place.longitude).format('0.000')}`}</div>
 
         <div className='place-detail__menu'>
-          <input ref='file' type='file' name='file' multiple='true' onChange={this.handleChangeFile}/>
+          <input
+            ref='file'
+            type='file'
+            name='file'
+            multiple='true'
+            accept=".jpg, .jpeg, .png"
+            onChange={this.handleChangeFile} />
           <Link to={pathHelper.routes.detail(place.route_id)}>뒤로</Link>
         </div>
 
