@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import numeral from 'numeral';
 
-import {fetchPlace, deletePlaceImage} from 'actions/places';
+import {fetchPlace, addPlaceImage, deletePlaceImage} from 'actions/places';
 import pathHelper from 'utils/pathHelper'
 import PlaceImage from 'components/PlaceImage';
 
@@ -15,6 +15,7 @@ class PlaceDetail extends Component {
     this.state = {
       images: []
     };
+    this.handleChangeFile = this.handleChangeFile.bind(this);
   }
   componentDidMount() {
     console.log('PlaceDetail componentDidMount');
@@ -29,6 +30,35 @@ class PlaceDetail extends Component {
     if(id !== newId) {
       fetchPlace(newId);
     }
+  }
+
+  handleChangeFile(event) {
+    const {addPlaceImage, fetchPlace, id} = this.props;
+
+    const files = this.refs.file.files;
+    const fileLength = files.length;
+    const createImage = (i) => {
+      const fd = new FormData();
+      fd.append('file', files[i]);
+
+      addPlaceImage(id, fd).then(() =>
+        fetchPlace(id)
+      );
+    }
+
+
+    const repeat = (times, i = 0) => {
+      return (func) => {
+        return (...args) => {
+          if(times > 0) {
+            func(i, ...args);
+            repeat(times - 1, i + 1)(func)(...args);
+          }
+        }
+      }
+    }
+
+    repeat(fileLength)(createImage)(files);
   }
 
   handleClickDeleteImage(imageId) {
@@ -49,7 +79,7 @@ class PlaceDetail extends Component {
         <div className='place-detail__position'>{`${numeral(place.latitude).format('0.000')},${numeral(place.longitude).format('0.000')}`}</div>
 
         <div className='place-detail__menu'>
-          <Link to={pathHelper.placeImages.new(place.id)}>이미지 추가</Link>
+          <input ref='file' type='file' name='file' multiple='true' onChange={this.handleChangeFile}/>
           <Link to={pathHelper.routes.detail(place.route_id)}>뒤로</Link>
         </div>
 
@@ -78,6 +108,8 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchPlace: (...args) =>
       dispatch(fetchPlace(...args)),
+    addPlaceImage: (...args) =>
+      dispatch(addPlaceImage(...args)),
     deletePlaceImage: (...args) =>
       dispatch(deletePlaceImage(...args)),
   }

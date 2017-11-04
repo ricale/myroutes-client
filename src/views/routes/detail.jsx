@@ -53,7 +53,7 @@ class RouteDetail extends Component {
 
   handleClickPlace(event, place) {
     this.setState({activePlace: place.id}, () =>
-      this.props.fetchPlace(this.state.activePlace);
+      this.props.fetchPlace(this.state.activePlace)
     );
   }
 

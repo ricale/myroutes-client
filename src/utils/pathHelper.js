@@ -7,8 +7,5 @@ export default {
   },
   places: {
     detail: (routeId, id) => `/routes/${routeId}/places/${id}`,
-  },
-  placeImages: {
-    new: (placeId) => `/places/${placeId}/images`
   }
 };
