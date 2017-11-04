@@ -22,8 +22,8 @@ class RouteList extends Component {
         <ul>
           <li className='route-list__header'>이름</li>
           {(routes || []).map(r =>
-            <Link to={pathHelper.routes.detail(r.id)}>
-              <li key={`route-${r.id}`} className='route-list__route'>
+            <Link key={`route-${r.id}`} to={pathHelper.routes.detail(r.id)}>
+              <li className='route-list__route'>
                   {r.name}
               </li>
             </Link>

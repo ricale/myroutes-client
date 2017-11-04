@@ -50,6 +50,7 @@ class PlaceDetail extends Component {
 
         <div className='place-detail__menu'>
           <Link to={pathHelper.placeImages.new(place.id)}>이미지 추가</Link>
+          <Link to={pathHelper.routes.detail(place.route_id)}>뒤로</Link>
         </div>
 
         <div className='place-detail__images'>

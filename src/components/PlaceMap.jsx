@@ -8,6 +8,7 @@ import './PlaceMap.less';
 export default class PlaceMap extends Component {
   static defaultProps = {
     editable: true,
+    searchable: true
   };
 
   render() {
@@ -18,7 +19,9 @@ export default class PlaceMap extends Component {
 
       markable,
       editable,
+      searchable,
 
+      onClickPlace,
       onChangePlaceName,
       onCreateMarker,
       onMoveMarker,
@@ -30,14 +33,6 @@ export default class PlaceMap extends Component {
 
     return (
       <div className={className || 'place-map'}>
-        <PlaceList
-          className='place-map__place-list'
-          style={listStyle}
-          places={places}
-          editable={editable}
-          onChangePlaceName={onChangePlaceName}
-          />
-
         <DaumMap
           className='place-map__map'
           markers={places}
@@ -46,6 +41,16 @@ export default class PlaceMap extends Component {
           onCreateMarker={onCreateMarker}
           onMoveMarker={onMoveMarker}
           onDeleteMarker={onDeleteMarker}
+          searchable={searchable}
+          />
+
+        <PlaceList
+          className='place-map__place-list'
+          style={listStyle}
+          places={places}
+          editable={editable}
+          onClickItem={onClickPlace}
+          onChangePlaceName={onChangePlaceName}
           />
       </div>
     );

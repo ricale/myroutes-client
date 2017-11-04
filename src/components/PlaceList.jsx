@@ -9,13 +9,19 @@ import './placeList.less'
 class Place extends Component {
   constructor(props) {
     super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    const {onClick, place} = this.props;
+    onClick(event, place);
   }
 
   render() {
-    const {place, editable, onChangeName} = this.props;
+    const {place, editable, active, onChangeName} = this.props;
 
     return (
-      <div className='place-list__place'>
+      <div className={`${active ? 'active' : ''} place-list__place`} onClick={this.handleClick}>
         <div className='place-list__place-name'>
           {editable && <input onChange={onChangeName} value={place.name} />}
           {!editable && place.name}
@@ -29,14 +35,40 @@ class Place extends Component {
 };
 
 export default class PlaceList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      active: undefined
+    };
+    this.handleClickItem = this.handleClickItem.bind(this);
+  }
+
+  handleClickItem(event, place) {
+    this.setState({active: place.id}, () =>
+      this.props.onClickItem(event, place)
+    );
+  }
+
   render() {
-    const {places, editable, onChangePlaceName, className, ...attrs} = this.props;
+    const {
+      places,
+      editable,
+      onClickItem,
+      onChangePlaceName,
+      className,
+      ...attrs
+    } = this.props;
+
+    const {active} = this.state;
+
     return (
-      <div {...attrs} className={`place-list ${className}`}>
+      <div {...attrs} className={`place-list ${className || ''}`}>
         {(places || []).map((p,i) => 
           <Place
             key={`place-${i}`}
             place={p}
+            active={active === p.id}
+            onClick={this.handleClickItem}
             onChangeName={(event) => onChangePlaceName(i, event.target.value)}
             editable={editable}
             />

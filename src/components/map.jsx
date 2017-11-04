@@ -275,7 +275,7 @@ export default class DaumMap extends Component {
     const {keyword, searchResult, searchPagination} = this.state;
 
     return (
-      <div {...attrs} className={`map ${className}`}>
+      <div {...attrs} className={`map ${className || ''}`}>
         <div className='map__map-wrapper'>
           <div ref="mapContainer" className='map__map-container'></div>
           <p>빈 곳에 우클릭: 장소 생성, 장소 우클릭: 장소 삭제</p>
