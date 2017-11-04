@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import numeral from 'numeral';
 
 import {fetchPlace, deletePlaceImage} from 'actions/places';
 import pathHelper from 'utils/pathHelper'
 import PlaceImage from 'components/PlaceImage';
+
+import './detail.less';
 
 class PlaceDetail extends Component {
   constructor(props) {
@@ -41,21 +44,23 @@ class PlaceDetail extends Component {
   render() {
     const {place} = this.props;
     return (
-      <div>
-        <h2>Place Detail</h2>
-        <div>{place.name}</div>
-        <div>{place.latitude}</div>
-        <div>{place.longitude}</div>
+      <div className='place-detail'>
+        <h2 className='place-detail__name'>{place.name}</h2>
+        <div className='place-detail__position'>{`${numeral(place.latitude).format('0.000')},${numeral(place.longitude).format('0.000')}`}</div>
 
-        <Link to={pathHelper.placeImages.new(place.id)}>이미지 추가</Link>
+        <div className='place-detail__menu'>
+          <Link to={pathHelper.placeImages.new(place.id)}>이미지 추가</Link>
+        </div>
 
-        {(place.images || []).map(img =>
-          <PlaceImage
-            src={`http://localhost:5000${img.url}`}
-            key={`img-${img.id}`}
-            onClickDelete={this.handleClickDeleteImage(img.id)}
-            />
-        )}
+        <div className='place-detail__images'>
+          {(place.images || []).map(img =>
+            <PlaceImage
+              src={`http://localhost:5000${img.url}`}
+              key={`img-${img.id}`}
+              onClickDelete={this.handleClickDeleteImage(img.id)}
+              />
+          )}
+        </div>
       </div>
     );
   }

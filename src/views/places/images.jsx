@@ -5,6 +5,8 @@ import {fetchPlace, addPlaceImage, deletePlaceImage} from 'actions/places';
 
 import PlaceImage from 'components/PlaceImage';
 
+import './images.less';
+
 class PlaceImages extends Component {
   constructor(props) {
     super(props);
@@ -60,19 +62,22 @@ class PlaceImages extends Component {
     const {place} = this.props;
 
     return (
-      <div>
-        <h2>Place Detail</h2>
-        <div>{place.name}</div>        
+      <div className='place-images'>
+        <h2 className='place-images__place-name'>{place.name}</h2>
 
-        <input ref='file' type='file' name='file' multiple='true' onChange={this.handleChangeFile}/>
+        <div className='place-images__menu'>
+          <input ref='file' type='file' name='file' multiple='true' onChange={this.handleChangeFile}/>
+        </div>
 
-        {(place.images || []).map(img =>
-          <PlaceImage
-            src={`http://localhost:5000${img.url}`}
-            key={`img-${img.id}`}
-            onClickDelete={this.handleClickDeleteImage(img.id)}
-            />
-        )}
+        <div className='place-images__images'>
+          {(place.images || []).map(img =>
+            <PlaceImage
+              src={`http://localhost:5000${img.url}`}
+              key={`img-${img.id}`}
+              onClickDelete={this.handleClickDeleteImage(img.id)}
+              />
+          )}
+        </div>
       </div>
     );
   }

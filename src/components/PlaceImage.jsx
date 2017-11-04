@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import './PlaceImage.less'
+
 export default class PlaceImage extends Component {
   static defaultProps = {
     containerStyle: {
@@ -21,10 +23,10 @@ export default class PlaceImage extends Component {
     } = this.props;
 
     return (
-      <div style={containerStyle}>
-        <img src={src} style={style} />
+      <div className='place-image'>
+        <img src={src} className='place-image__img' />
         {onClickDelete &&
-          <a href='#' onClick={onClickDelete}>삭제</a>
+          <a href='#' onClick={onClickDelete} className='place-image__delete-button'>삭제</a>
         }
       </div>
     );
