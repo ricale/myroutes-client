@@ -15,6 +15,14 @@ export default class PlaceImage extends Component {
     this.handleLoadImage = this.handleLoadImage.bind(this);
   }
 
+  componentWillMount() {
+    this._ismounted = true;
+  }
+
+  componentWillUnmount() {
+    this._ismounted = false;
+  }
+
   handleLoadImage(event) {
     const reactElement = this;
 
@@ -23,7 +31,7 @@ export default class PlaceImage extends Component {
 
     EXIF.getData(event.target, function() {
       const orientation = EXIF.getTag(this, "Orientation");
-      reactElement.setState({
+      reactElement._ismounted && reactElement.setState({
         orientation,
         imageWidth,
         imageHeight

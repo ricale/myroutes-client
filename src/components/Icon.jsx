@@ -33,10 +33,10 @@ export default class Icon extends Component {
   }
 
   render () {
-    const {name, onClick} = this.props;
+    const {name, onClick, style} = this.props;
 
     return (
-      <i className={`fa fa-${name}${this.getSizeClassName()}${this.getStyleClassName()}`} onClick={onClick}></i>
+      <i className={`fa fa-${name}${this.getSizeClassName()}${this.getStyleClassName()}`} onClick={onClick} style={style}></i>
     )
   }
 }

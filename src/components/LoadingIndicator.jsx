@@ -1,29 +1,39 @@
 import React, {Component} from 'react';
 
+import Icon from 'components/Icon';
+
 export default class LoadingIndicator extends Component {
   static defaultProps = {
     show: false,
-    backgroundColor: 'white'
+    iconName: 'hourglass-half',
+    iconStyle: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      color: 'darkgray'
+    },
   };
 
   render() {
     const {
       show,
-      backgroundColor
+      iconName,
+      iconStyle,
     } = this.props;
 
     const display = show ? 'block' : 'none';
+
     return (
       <div style={{
           display,
-          backgroundColor,
-          opacity: 0.75,
           position: 'fixed',
           top: 0,
           left: 0,
           width: '100%',
           height: '100%'
         }}>
+
+        <Icon name={iconName} size='2x' style={iconStyle} />
       </div>
     );
   }
