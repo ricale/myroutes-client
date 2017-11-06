@@ -23,6 +23,7 @@ export default class PlaceMap extends Component {
 
       onClickPlace,
       onChangePlaceName,
+      onChangePlaceOrder,
       onCreateMarker,
       onMoveMarker,
       onDeleteMarker,
@@ -51,6 +52,7 @@ export default class PlaceMap extends Component {
           editable={editable}
           onClickItem={onClickPlace}
           onChangePlaceName={onChangePlaceName}
+          onChangePlaceOrder={onChangePlaceOrder}
           />
       </div>
     );

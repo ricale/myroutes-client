@@ -77,6 +77,20 @@ export default class RouteForm extends Component {
     this.setState({places});
   }
 
+  handleChangePlaceOrder(index, direction) {
+    const {places} = this.state;
+
+    const destination = ((i, d) =>
+      d === 'up' ? i - 1 : i + 1
+    )(index, direction);
+
+    const [spliced] = places.splice(index, 1);
+
+    places.splice(destination, 0, spliced);
+
+    this.setState({places});
+  }
+
   handleSubmit() {
     const {onSubmit} = this.props;
     const {name, places} = this.state;
@@ -112,6 +126,7 @@ export default class RouteForm extends Component {
 
           editable={true}
           onChangePlaceName={(i, name) => this.handleChangePlaceName(i, name)}
+          onChangePlaceOrder={(i, direction) => this.handleChangePlaceOrder(i, direction)}
           onCreateMarker={this.handleCreateMarker}
           onMoveMarker={this.handleMoveMarker}
           onDeleteMarker={this.handleDeleteMarker}
