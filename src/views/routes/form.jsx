@@ -80,7 +80,12 @@ export default class RouteForm extends Component {
   handleSubmit() {
     const {onSubmit} = this.props;
     const {name, places} = this.state;
-    const data = {name, places};
+    const data = {
+      name,
+      places: places.map((p,i) =>
+        Object.assign({order: i}, p)
+      )
+    };
 
     onSubmit && onSubmit(data);
   }

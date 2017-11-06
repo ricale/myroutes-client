@@ -22,6 +22,9 @@ class Place extends Component {
 
     return (
       <div className={`${active ? 'active' : ''} place-list__place`} onClick={this.handleClick}>
+        {!isNaN(place.odr) &&
+          <div className='place-list__place-index'>{place.odr + 1}</div>
+        }
         <div className='place-list__place-name'>
           {editable && <input onChange={onChangeName} value={place.name} />}
           {!editable && place.name}
@@ -49,6 +52,11 @@ export default class PlaceList extends Component {
     );
   }
 
+  isActive(id) {
+    const {active} = this.state;
+    return active !== undefined && active === p.id
+  }
+
   render() {
     const {
       places,
@@ -59,15 +67,13 @@ export default class PlaceList extends Component {
       ...attrs
     } = this.props;
 
-    const {active} = this.state;
-
     return (
       <div {...attrs} className={`place-list ${className || ''}`}>
         {(places || []).map((p,i) => 
           <Place
             key={`place-${i}`}
             place={p}
-            active={active === p.id}
+            active={this.isActive(p.id)}
             onClick={this.handleClickItem}
             onChangeName={(event) => onChangePlaceName(i, event.target.value)}
             editable={editable}
