@@ -43,6 +43,7 @@ export default class PlaceMap extends Component {
           onCreateMarker={onCreateMarker}
           onMoveMarker={onMoveMarker}
           onDeleteMarker={onDeleteMarker}
+          markable={markable}
           searchable={searchable}
           hasPath={hasPath}
           />

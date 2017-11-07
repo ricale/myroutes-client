@@ -57,7 +57,7 @@ export default class DaumMap extends Component {
 
   handleRightClickMap(mouseEvent) {
     const latlng = mouseEvent.latLng;
-    this.addMarker({latlng});
+    this.addPlaceMarker({latlng});
   }
 
   handleChangeKeyword(event) {
@@ -129,7 +129,7 @@ export default class DaumMap extends Component {
     const bounds = new daum.maps.LatLngBounds();
 
     (markers || []).forEach(m => {
-      this.addMarker(m, {noCallback: true, name: m.name});
+      this.addPlaceMarker(m, {noCallback: true, name: m.name});
       bounds.extend(this.markers[this.currentMarker].getPosition());
     });
 
@@ -146,6 +146,22 @@ export default class DaumMap extends Component {
       strokeColor: '#DB4040',
       strokeOpacity: 1
     })
+
+    this.startPoint = new daum.maps.CustomOverlay({
+      map: this.map,
+      position: this.markers[0].getPosition(),
+      content: `<div style="margin-left: 50px; background-color: white; padding: 3px; border: 1px solid #AAA;">
+        <span class="left"></span><span class="center">출발</span><span class="right"></span>
+      </div>`
+    });
+
+    this.endPoint = new daum.maps.CustomOverlay({
+      map: this.map,
+      position: this.markers[this.markers.length - 1].getPosition(),
+      content: `<div style="margin-left: 50px; background-color: white; padding: 3px; border: 1px solid #AAA;">
+        <span class="left"></span><span class="center">도착</span><span class="right"></span>
+      </div>`
+    });
   }
 
   initInfoWindow() {
@@ -187,7 +203,10 @@ export default class DaumMap extends Component {
     if(!options.latlng) {
       options.latlng = new daum.maps.LatLng(options.latitude, options.longitude);
     }
-    options.draggable === undefined && (options.draggable = true);
+
+    if(options.draggable === undefined) {
+      options.draggable = this.props.markable;
+    }
 
     return new daum.maps.Marker(Object.assign({
       map: this.map,
@@ -195,22 +214,27 @@ export default class DaumMap extends Component {
     }, options));
   }
 
-  addMarker(position, options = {}) {
-    const marker = this.createMarker(position);
+  addEventListenerToMarker(marker, options) {
+    if(this.props.markable) {
+      daum.maps.event.addListener(marker, 'dragstart', () => this.currentMarker = index);
+      daum.maps.event.addListener(marker, 'dragend',   () => {
+        const {onMoveMarker} = this.props;
+        const _latlng = marker.getPosition();
+        onMoveMarker && onMoveMarker(index, _latlng.getLat(), _latlng.getLng());
+      });
 
-    this.markers.push(marker);
-    const index = this.markers.length - 1
-    this.currentMarker = index;
+      daum.maps.event.addListener(marker, 'rightclick', () => {
+        const i = this.markers.indexOf(marker);
+        if(i !== -1) {
+          this.markers.splice(i, 1);
+          marker.setMap(null);
+          this.infoWindow.close();
 
-    const handleChangeCurrentMarker = () => this.currentMarker = index;
-
-    daum.maps.event.addListener(marker, 'click',     handleChangeCurrentMarker);
-    daum.maps.event.addListener(marker, 'dragstart', handleChangeCurrentMarker);
-    daum.maps.event.addListener(marker, 'dragend',   () => {
-      const {onMoveMarker} = this.props;
-      const _latlng = marker.getPosition();
-      onMoveMarker && onMoveMarker(index, _latlng.getLat(), _latlng.getLng());
-    });
+          const {onDeleteMarker} = this.props;
+          onDeleteMarker && onDeleteMarker(i);
+        }
+      });
+    }
 
     daum.maps.event.addListener(marker, 'mouseover', () =>
       this.displayInfoWindow(marker, options.name)
@@ -219,23 +243,31 @@ export default class DaumMap extends Component {
     daum.maps.event.addListener(marker, 'mouseout', () =>
       this.infoWindow.close()
     );
+  }
 
-    daum.maps.event.addListener(marker, 'rightclick', () => {
-      const i = this.markers.indexOf(marker);
-      if(i !== -1) {
-        this.markers.splice(i, 1);
-        marker.setMap(null);
-        this.infoWindow.close();
+  addPlaceMarker(position, options = {}) {
+    const {markable, onCreateMarker} = this.props;
 
-        const {onDeleteMarker} = this.props;
-        onDeleteMarker && onDeleteMarker(i);
-      }
-    });
+    const marker = this.createMarker(
+      Object.assign({}, position, {
+        image: !markable && new daum.maps.MarkerImage(
+          'public/images/red-circle.png',
+          new daum.maps.Size(10, 10), {
+            offset: new daum.maps.Point(5, 5)
+          }
+        )
+      })
+    );
 
-    const {onCreateMarker} = this.props;
-    if(!options.noCallback) {
+    this.markers.push(marker);
+    const index = this.markers.length - 1
+    this.currentMarker = index;
+
+    this.addEventListenerToMarker(marker, options);
+
+    if(!options.noCallback && onCreateMarker) {
       const latlng = marker.getPosition();
-      onCreateMarker && onCreateMarker(
+      onCreateMarker(
         this.currentMarker,
         latlng.getLat(),
         latlng.getLng(),
@@ -257,9 +289,9 @@ export default class DaumMap extends Component {
 
     const {markable} = this.props;
 
-    if(this.props.markable) {
+    if(markable) {
       daum.maps.event.addListener(marker, 'rightclick', () =>
-        this.addMarker({latlng: marker.getPosition()}, {name: place.place_name})
+        this.addPlaceMarker({latlng: marker.getPosition()}, {name: place.place_name})
       );
     }
 
