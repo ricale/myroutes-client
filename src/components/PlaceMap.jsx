@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import DaumMap from 'components/map';
+import DaumMap from 'components/Map';
 import PlaceList from 'components/PlaceList';
 
 import './PlaceMap.less';
@@ -20,6 +20,7 @@ export default class PlaceMap extends Component {
       markable,
       editable,
       searchable,
+      hasPath,
 
       onClickPlace,
       onChangePlaceName,
@@ -43,6 +44,7 @@ export default class PlaceMap extends Component {
           onMoveMarker={onMoveMarker}
           onDeleteMarker={onDeleteMarker}
           searchable={searchable}
+          hasPath={hasPath}
           />
 
         <PlaceList

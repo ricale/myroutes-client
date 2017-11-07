@@ -88,6 +88,7 @@ class RouteDetail extends Component {
           markable={false}
           editable={false}
           searchable={false}
+          hasPath={true}
           />
 
         {this.hasActivePlace() &&

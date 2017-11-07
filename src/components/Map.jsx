@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 
-import './map.less';
+import './Map.less';
 
 export default class DaumMap extends Component {
   static defaultProps = {
     markable: true,
-    searchable: true
+    searchable: true,
+    hasPath: false
   };
 
   constructor(props) {
@@ -25,12 +26,18 @@ export default class DaumMap extends Component {
   }
 
   componentDidMount() {
-    const {initialMarkers, markers} = this.props;
+    const {initialMarkers, markers, hasPath, searchable} = this.props;
 
     this.initMap();
     this.initMarkers(initialMarkers || markers);
 
-    if(this.props.searchable) {
+    if(hasPath) {
+      this.initPath();
+    }
+
+    this.initInfoWindow();
+
+    if(searchable) {
       this.initSearcher();
     }
   }
@@ -42,6 +49,9 @@ export default class DaumMap extends Component {
     if(markers !== newMarkers) {
       this.removeAllMarkers();
       this.initMarkers(newProps.markers);
+
+      this.removePath();
+      this.initPath();
     }
   }
 
@@ -128,9 +138,22 @@ export default class DaumMap extends Component {
     }
   }
 
+  initPath() {
+    this.path = new daum.maps.Polyline({
+      map: this.map,
+      path: this.markers.map(m => m.getPosition()),
+      strokeWeight: 3,
+      strokeColor: '#DB4040',
+      strokeOpacity: 1
+    })
+  }
+
+  initInfoWindow() {
+    this.infoWindow = new daum.maps.InfoWindow({zIndex: 1});
+  }
+
   initSearcher() {
     this.ps = new daum.maps.services.Places();
-    this.infoWindow = new daum.maps.InfoWindow({zIndex: 1});
   }
 
   displayPlaces(places) {
@@ -259,6 +282,13 @@ export default class DaumMap extends Component {
     this.searchMarkers = [];
   }
 
+  removePath() {
+    if(this.path) {
+      this.path.setMap(null);
+      this.path = null;
+    }
+  }
+
   render() {
     const {
       className,
@@ -266,9 +296,10 @@ export default class DaumMap extends Component {
       onMoveMarker,
       onDeleteMarker,
       markers,
+      initialMarkers,
       markable,
       searchable,
-      initialMarkers,
+      hasPath,
       ...attrs
     } = this.props;
 
