@@ -61,30 +61,22 @@ class Place extends Component {
 export default class PlaceList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      active: undefined
-    };
     this.handleClickItem = this.handleClickItem.bind(this);
   }
 
   handleClickItem(event, place) {
-    const {onClickItem} = this.props;
-
-    if(onClickItem) {
-      this.setState({active: place.id}, () =>
-        this.props.onClickItem(event, place)
-      );
-    }
+    this.props.onClickItem(event, place);
   }
 
   isActive(id) {
-    const {active} = this.state;
-    return active !== undefined && active === id
+    const {activePlace} = this.props;
+    return activePlace !== undefined && activePlace === id
   }
 
   render() {
     const {
       places,
+      activePlace,
       editable,
       onClickItem,
       onChangePlaceName,

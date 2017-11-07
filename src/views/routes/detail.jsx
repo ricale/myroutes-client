@@ -66,6 +66,7 @@ class RouteDetail extends Component {
 
   render() {
     const {route, place} = this.props;
+    const {activePlace} = this.state;
 
     if(!route || !route.id) {
       return <div></div>
@@ -85,6 +86,7 @@ class RouteDetail extends Component {
           onClickPlace={this.handleClickPlace}
           places={route.places}
           markers={route.places}
+          activePlace={activePlace}
           markable={false}
           editable={false}
           searchable={false}

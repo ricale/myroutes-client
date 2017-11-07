@@ -150,16 +150,22 @@ export default class DaumMap extends Component {
     this.startPoint = new daum.maps.CustomOverlay({
       map: this.map,
       position: this.markers[0].getPosition(),
-      content: `<div style="margin-left: 50px; background-color: white; padding: 3px; border: 1px solid #AAA;">
-        <span class="left"></span><span class="center">출발</span><span class="right"></span>
+      clickable: false,
+      xAnchor: 0,
+      yAnchor: 1,
+      content: `<div style="background-color: white; padding: 3px; border: 1px solid #AAA;">
+        <span class="center">출발</span>
       </div>`
     });
 
     this.endPoint = new daum.maps.CustomOverlay({
       map: this.map,
       position: this.markers[this.markers.length - 1].getPosition(),
-      content: `<div style="margin-left: 50px; background-color: white; padding: 3px; border: 1px solid #AAA;">
-        <span class="left"></span><span class="center">도착</span><span class="right"></span>
+      clickable: false,
+      xAnchor: 0,
+      yAnchor: 1,
+      content: `<div style="background-color: white; padding: 3px; border: 1px solid #AAA;">
+        <span class="center">도착</span>
       </div>`
     });
   }
@@ -195,7 +201,7 @@ export default class DaumMap extends Component {
   }
 
   displayInfoWindow(marker, title) {
-    this.infoWindow.setContent(`<div style="padding:5px;z-index:1;">${title}</div>`);
+    this.infoWindow.setContent(`<div style="padding:5px;z-index:1;white-space: nowrap;word-wrap: normal;text-overflow: ellipsis;overflow: hidden;">${title}</div>`);
     this.infoWindow.open(this.map, marker);
   }
 
@@ -214,7 +220,7 @@ export default class DaumMap extends Component {
     }, options));
   }
 
-  addEventListenerToMarker(marker, options) {
+  addEventListenerToMarker(marker, index, options) {
     if(this.props.markable) {
       daum.maps.event.addListener(marker, 'dragstart', () => this.currentMarker = index);
       daum.maps.event.addListener(marker, 'dragend',   () => {
@@ -235,6 +241,12 @@ export default class DaumMap extends Component {
         }
       });
     }
+
+    daum.maps.event.addListener(marker, 'click', () => {
+      const {onClickMarker, markers: propMarkers} = this.props;
+      console.log(index, propMarkers[index]);
+      onClickMarker && onClickMarker(null, propMarkers[index]);
+    });
 
     daum.maps.event.addListener(marker, 'mouseover', () =>
       this.displayInfoWindow(marker, options.name)
@@ -263,7 +275,7 @@ export default class DaumMap extends Component {
     const index = this.markers.length - 1
     this.currentMarker = index;
 
-    this.addEventListenerToMarker(marker, options);
+    this.addEventListenerToMarker(marker, index, options);
 
     if(!options.noCallback && onCreateMarker) {
       const latlng = marker.getPosition();
@@ -324,14 +336,16 @@ export default class DaumMap extends Component {
   render() {
     const {
       className,
-      onCreateMarker,
-      onMoveMarker,
-      onDeleteMarker,
       markers,
       initialMarkers,
       markable,
       searchable,
       hasPath,
+
+      onCreateMarker,
+      onMoveMarker,
+      onDeleteMarker,
+      onClickMarker,
       ...attrs
     } = this.props;
 

@@ -16,6 +16,7 @@ export default class PlaceMap extends Component {
       className,
       places,
       initialPlaces,
+      activePlace,
 
       markable,
       editable,
@@ -28,9 +29,6 @@ export default class PlaceMap extends Component {
       onCreateMarker,
       onMoveMarker,
       onDeleteMarker,
-
-      listStyle,
-      mapStyle
     } = this.props;
 
     return (
@@ -38,21 +36,24 @@ export default class PlaceMap extends Component {
         <DaumMap
           className='place-map__map'
           markers={places}
-          style={mapStyle}
           initialMarkers={initialPlaces}
-          onCreateMarker={onCreateMarker}
-          onMoveMarker={onMoveMarker}
-          onDeleteMarker={onDeleteMarker}
           markable={markable}
           searchable={searchable}
           hasPath={hasPath}
+
+          onCreateMarker={onCreateMarker}
+          onMoveMarker={onMoveMarker}
+          onDeleteMarker={onDeleteMarker}
+          onClickMarker={onClickPlace}
           />
 
         <PlaceList
           className='place-map__place-list'
-          style={listStyle}
           places={places}
+          activePlace={activePlace}
+
           editable={editable}
+
           onClickItem={onClickPlace}
           onChangePlaceName={onChangePlaceName}
           onChangePlaceOrder={onChangePlaceOrder}
