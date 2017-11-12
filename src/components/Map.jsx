@@ -13,8 +13,7 @@ export default class DaumMap extends Component {
     super(props);
     this.state = {
       keyword: '',
-      searchResult: [],
-      initialMarkers: undefined
+      searchResult: []
     };
 
     this.markers = [];
@@ -26,10 +25,10 @@ export default class DaumMap extends Component {
   }
 
   componentDidMount() {
-    const {initialMarkers, markers, hasPath, searchable} = this.props;
+    const {initialPlaces, places, hasPath, searchable} = this.props;
 
     this.initMap();
-    this.initMarkers(initialMarkers || markers);
+    this.initMarkers(initialPlaces || places);
 
     if(hasPath) {
       this.initPath();
@@ -42,16 +41,34 @@ export default class DaumMap extends Component {
     }
   }
 
-  componentWillReceiveProps(newProps) {
-    const {markers} = this.props;
-    const {markers: newMarkers} = newProps;
+  componentWillUnmount() {
+    this.removeAllMarkers();
+    this.removeAllSearchMarkers();
+    this.removePath();
 
-    if(markers !== newMarkers) {
+    this.selectedMarker.setMap(null);
+    this.selectedMarker = null;
+    this.infoWindow = null;
+    this.ps = null;
+  }
+
+  componentWillReceiveProps(newProps) {
+    const {places, selectedPlaceIndex} = this.props;
+    const {
+      places: newPlaces,
+      selectedPlaceIndex: newSelectedPlaceIndex
+    } = newProps;
+
+    if(places !== newPlaces) {
       this.removeAllMarkers();
-      this.initMarkers(newProps.markers);
+      this.initMarkers(newProps.places);
 
       this.removePath();
       this.initPath();
+    }
+
+    if(selectedPlaceIndex !== newSelectedPlaceIndex) {
+      this.showSelectedPlaceMarker(this.markers[newSelectedPlaceIndex].getPosition());
     }
   }
 
@@ -125,12 +142,12 @@ export default class DaumMap extends Component {
     }
   }
 
-  initMarkers(markers = this.props.markers) {
+  initMarkers(places = this.props.places) {
     const bounds = new daum.maps.LatLngBounds();
 
-    (markers || []).forEach(m => {
+    (places || []).forEach(m => {
       this.addPlaceMarker(m, {noCallback: true, name: m.name});
-      bounds.extend(this.markers[this.currentMarker].getPosition());
+      bounds.extend(this.markers[this.currentMarkerIndex].getPosition());
     });
 
     if(!bounds.isEmpty()) {
@@ -222,7 +239,7 @@ export default class DaumMap extends Component {
 
   addEventListenerToMarker(marker, index, options) {
     if(this.props.markable) {
-      daum.maps.event.addListener(marker, 'dragstart', () => this.currentMarker = index);
+      daum.maps.event.addListener(marker, 'dragstart', () => this.currentMarkerIndex = index);
       daum.maps.event.addListener(marker, 'dragend',   () => {
         const {onMoveMarker} = this.props;
         const _latlng = marker.getPosition();
@@ -243,9 +260,8 @@ export default class DaumMap extends Component {
     }
 
     daum.maps.event.addListener(marker, 'click', () => {
-      const {onClickMarker, markers: propMarkers} = this.props;
-      console.log(index, propMarkers[index]);
-      onClickMarker && onClickMarker(null, propMarkers[index]);
+      const {onClickMarker, places} = this.props;
+      onClickMarker && onClickMarker(null, places[index]);
     });
 
     daum.maps.event.addListener(marker, 'mouseover', () =>
@@ -273,18 +289,35 @@ export default class DaumMap extends Component {
 
     this.markers.push(marker);
     const index = this.markers.length - 1
-    this.currentMarker = index;
+    this.currentMarkerIndex = index;
 
     this.addEventListenerToMarker(marker, index, options);
 
     if(!options.noCallback && onCreateMarker) {
       const latlng = marker.getPosition();
       onCreateMarker(
-        this.currentMarker,
+        this.currentMarkerIndex,
         latlng.getLat(),
         latlng.getLng(),
         {name: options.name}
       );
+    }
+  }
+
+  showSelectedPlaceMarker(position) {
+    if(this.selectedMarker) {
+      this.selectedMarker.setPosition(position);
+
+    } else {
+      this.selectedMarker = this.createMarker({
+        position,
+        image: new daum.maps.MarkerImage(
+          'public/images/selected-red-circle.png',
+          new daum.maps.Size(10, 10), {
+            offset: new daum.maps.Point(5, 5)
+          }
+        )
+      });
     }
   }
 
@@ -330,14 +363,19 @@ export default class DaumMap extends Component {
     if(this.path) {
       this.path.setMap(null);
       this.path = null;
+      this.startPoint.setMap(null);
+      this.startPoint = null;
+      this.endPoint.setMap(null);
+      this.endPoint = null;
     }
   }
 
   render() {
     const {
       className,
-      markers,
-      initialMarkers,
+      places,
+      initialPlaces,
+      selectedPlaceIndex,
       markable,
       searchable,
       hasPath,

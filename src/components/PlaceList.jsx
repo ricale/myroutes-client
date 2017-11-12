@@ -69,14 +69,14 @@ export default class PlaceList extends Component {
   }
 
   isActive(id) {
-    const {activePlace} = this.props;
-    return activePlace !== undefined && activePlace === id
+    const {activePlaceId} = this.props;
+    return activePlaceId !== undefined && activePlaceId === id
   }
 
   render() {
     const {
       places,
-      activePlace,
+      activePlaceId,
       editable,
       onClickItem,
       onChangePlaceName,

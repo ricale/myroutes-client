@@ -16,7 +16,7 @@ class RouteDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activePlace: undefined
+      activePlaceId: undefined
     };
     this.handleClickDelete = this.handleClickDelete.bind(this);
     this.handleClickPlace = this.handleClickPlace.bind(this);
@@ -52,21 +52,21 @@ class RouteDetail extends Component {
   }
 
   handleClickPlace(event, place) {
-    this.setState({activePlace: place.id}, () =>
-      this.props.fetchPlace(this.state.activePlace)
+    this.setState({activePlaceId: place.id}, () =>
+      this.props.fetchPlace(this.state.activePlaceId)
     );
   }
 
   hasActivePlace() {
-    const {activePlace} = this.state;
+    const {activePlaceId} = this.state;
     const {place} = this.props;
 
-    return activePlace && place && activePlace === place.id;
+    return activePlaceId && place && activePlaceId === place.id;
   }
 
   render() {
     const {route, place} = this.props;
-    const {activePlace} = this.state;
+    const {activePlaceId} = this.state;
 
     if(!route || !route.id) {
       return <div></div>
@@ -86,7 +86,7 @@ class RouteDetail extends Component {
           onClickPlace={this.handleClickPlace}
           places={route.places}
           markers={route.places}
-          activePlace={activePlace}
+          activePlaceId={activePlaceId}
           markable={false}
           editable={false}
           searchable={false}
