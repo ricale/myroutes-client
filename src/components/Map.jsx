@@ -46,8 +46,11 @@ export default class DaumMap extends Component {
     this.removeAllSearchMarkers();
     this.removePath();
 
-    this.selectedMarker.setMap(null);
-    this.selectedMarker = null;
+    if(this.selectedMarker) {
+      this.selectedMarker.setMap(null);
+      this.selectedMarker = null;
+    }
+
     this.infoWindow = null;
     this.ps = null;
   }
@@ -68,7 +71,11 @@ export default class DaumMap extends Component {
     }
 
     if(selectedPlaceIndex !== newSelectedPlaceIndex) {
-      this.showSelectedPlaceMarker(this.markers[newSelectedPlaceIndex].getPosition());
+      if(!newSelectedPlaceIndex) {
+        this.hideSelectedPlaceMarker();
+      } else {
+        this.showSelectedPlaceMarker(this.markers[newSelectedPlaceIndex].getPosition());
+      }
     }
   }
 
@@ -321,6 +328,13 @@ export default class DaumMap extends Component {
     }
   }
 
+  hideSelectedPlaceMarker() {
+    if(this.selectedMarker) {
+      this.selectedMarker.setMap(null);
+      this.selectedMarker = null;
+    }
+  }
+
   addSearchMarker(latlng, place) {
     const image = new daum.maps.MarkerImage(
       'public/images/marker.png',
@@ -393,7 +407,7 @@ export default class DaumMap extends Component {
       <div {...attrs} className={`map ${className || ''}`}>
         <div className='map__map-wrapper'>
           <div ref="mapContainer" className='map__map-container'></div>
-          <p>빈 곳에 우클릭: 장소 생성, 장소 우클릭: 장소 삭제</p>
+          <div>빈 곳에 우클릭: 장소 생성, 장소 우클릭: 장소 삭제</div>
         </div>
         {searchable &&
           <div className='map__search-container'>

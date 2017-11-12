@@ -20,6 +20,7 @@ class RouteDetail extends Component {
     };
     this.handleClickDelete = this.handleClickDelete.bind(this);
     this.handleClickPlace = this.handleClickPlace.bind(this);
+    this.handleClickShowAllImages = this.handleClickShowAllImages.bind(this);
   }
 
   componentDidMount() {
@@ -52,9 +53,14 @@ class RouteDetail extends Component {
   }
 
   handleClickPlace(event, place) {
-    this.setState({activePlaceId: place.id}, () =>
+    this.setState({activePlaceId: place.id, showAllImages: false}, () =>
       this.props.fetchPlace(this.state.activePlaceId)
     );
+  }
+
+  handleClickShowAllImages(event) {
+    const toggled = !this.state.showAllImages;
+    this.setState({showAllImages: toggled, activePlaceId: undefined});
   }
 
   hasActivePlace() {
@@ -62,6 +68,12 @@ class RouteDetail extends Component {
     const {place} = this.props;
 
     return activePlaceId && place && activePlaceId === place.id;
+  }
+
+  showWholeRouteImages() {
+    const {showAllImages} = this.state;
+
+    return showAllImages;
   }
 
   render() {
@@ -82,27 +94,40 @@ class RouteDetail extends Component {
           </ul>
         </div>
 
-        <PlaceMap
-          onClickPlace={this.handleClickPlace}
-          places={route.places}
-          markers={route.places}
-          activePlaceId={activePlaceId}
-          markable={false}
-          editable={false}
-          searchable={false}
-          hasPath={true}
-          />
+        <div className='route-detail__content'>
+          <PlaceMap
+            onClickPlace={this.handleClickPlace}
+            places={route.places}
+            markers={route.places}
+            activePlaceId={activePlaceId}
+            markable={false}
+            editable={false}
+            searchable={false}
+            hasPath={true}
+            >
+            <button className='route-detail__show-all-image-button' onClick={this.handleClickShowAllImages}>모든 이미지 보기</button>
+          </PlaceMap>
 
-        {this.hasActivePlace() &&
-          <div className='route-detail__place-images'>
-            {place.images.map(img =>
+          {this.hasActivePlace() &&
+            place.images.map(img =>
               <PlaceImage
-                src={`http://localhost:5000${img.url}`}
+                width={128}
+                src={`http://localhost:5000${img.thumbnail2url}`}
                 key={`img-${img.id}`}
                 />
-            )}
-          </div>
-        }
+            )
+          }
+
+          {this.showWholeRouteImages() &&
+            route.images.map(img =>
+              <PlaceImage
+                width={128}
+                src={`http://localhost:5000${img.thumbnail2url}`}
+                key={`img-${img.id}`}
+                />
+            )
+          }
+        </div>
       </div>
     );
   }

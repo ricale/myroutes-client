@@ -40,25 +40,14 @@ class PlaceDetail extends Component {
     const createImage = (i) => {
       const fd = new FormData();
       fd.append('file', files[i]);
-
-      addPlaceImage(id, fd).then(() =>
-        fetchPlace(id)
-      );
+      return addPlaceImage(id, fd)
     }
 
-
-    const repeat = (times, i = 0) => {
-      return (func) => {
-        return (...args) => {
-          if(times > 0) {
-            func(i, ...args);
-            repeat(times - 1, i + 1)(func)(...args);
-          }
-        }
-      }
-    }
-
-    repeat(fileLength)(createImage)(files);
+    Promise.all(
+      [...Array(fileLength).keys()].map(createImage)
+    ).then(() =>
+      fetchPlace(id)
+    );
   }
 
   handleClickDeleteImage(imageId) {
@@ -84,7 +73,7 @@ class PlaceDetail extends Component {
             type='file'
             name='file'
             multiple='true'
-            accept=".jpg, .jpeg, .png"
+            accept=".jpg, .jpeg, .png, .gif"
             onChange={this.handleChangeFile} />
           <Link to={pathHelper.routes.detail(place.route_id)}>뒤로</Link>
         </div>
@@ -92,7 +81,7 @@ class PlaceDetail extends Component {
         <div className='place-detail__images'>
           {(place.images || []).map(img =>
             <PlaceImage
-              src={`http://localhost:5000${img.url}`}
+              src={`http://localhost:5000${img.thumbnail1url}`}
               key={`img-${img.id}`}
               onClickDelete={this.handleClickDeleteImage(img.id)}
               />

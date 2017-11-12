@@ -5,7 +5,7 @@ import requester from '../utils/requester';
 const actions = createActions({
   PLACES: {
     FETCH: {
-      REQUEST: () => ({}),
+      REQUEST: () => ({current: {}}),
       SUCCESS: (response) => ({current: response.data}),
       FAILURE: () => ({})
     },

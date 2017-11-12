@@ -6,7 +6,10 @@ import './PlaceImage.less'
 
 export default class PlaceImage extends Component {
   static defaultProps = {
-    width: 300
+    width: 300,
+    wall: true,
+    loaded: false,
+    correctImageOrientation: false
   };
 
   constructor(props) {
@@ -24,14 +27,21 @@ export default class PlaceImage extends Component {
   }
 
   handleLoadImage(event) {
-    const reactElement = this;
+    const {correctImageOrientation} = this.props;
 
     const imageWidth = this.el.offsetWidth;
     const imageHeight = this.el.offsetHeight;
 
+    if(!correctImageOrientation) {
+      this.setState({loaded: true, imageWidth, imageHeight});
+    }
+
+    const reactElement = this;
+
     EXIF.getData(event.target, function() {
-      const orientation = EXIF.getTag(this, "Orientation");
+      const orientation = EXIF.getTag(this, "Orientation") || 0;
       reactElement._ismounted && reactElement.setState({
+        loaded: true,
         orientation,
         imageWidth,
         imageHeight
@@ -42,6 +52,13 @@ export default class PlaceImage extends Component {
   isRotated90Degrees() {
     const {orientation} = this.state;
     return orientation >= 5;
+  }
+
+  isNeededWall() {
+    const {wall} = this.props;
+    const {loaded} = this.state;
+
+    return wall && !loaded;
   }
 
   getTransform() {
@@ -55,10 +72,23 @@ export default class PlaceImage extends Component {
     };
   }
 
+  getImageStyle() {
+    const {width, correctImageOrientation} = this.props;
+
+    const style = {
+      maxWidth: width,
+      maxHeight: width,
+    };
+
+    if(!correctImageOrientation) {
+      return style;
+    }
+
+    return Object.assign(style, this.getTransform());
+  }
+
   getContainerSize() {
-    const {
-      width
-    } = this.props;
+    const {correctImageOrientation, width} = this.props;
 
     const {
       imageWidth,
@@ -66,9 +96,24 @@ export default class PlaceImage extends Component {
       orientation
     } = this.state;
 
+    // return {
+    //   width:  (this.isRotated90Degrees() ? imageHeight : imageWidth)  || width,
+    //   height: (this.isRotated90Degrees() ? imageWidth  : imageHeight) || width,
+    // }
+
+    if(!imageWidth) {
+      return {width, height: width};
+    }
+
+    const length = imageWidth > imageHeight ? imageWidth : imageHeight;
+    const paddingTop  = imageWidth > imageHeight ? (imageWidth - imageHeight) / 2 : 0;
+    const paddingLeft = imageWidth > imageHeight ? 0 : (imageHeight - imageWidth) / 2;
+
     return {
-      width:  (this.isRotated90Degrees() ? imageHeight : imageWidth)  || width,
-      height: (this.isRotated90Degrees() ? imageWidth  : imageHeight) || width,
+      width:  length,
+      height: length,
+      paddingTop,
+      paddingLeft
     }
   }
 
@@ -76,17 +121,13 @@ export default class PlaceImage extends Component {
     const {
       src,
       onClickDelete,
-      width
+      width,
+      correctImageOrientation
     } = this.props;
-
-    const {orientation} = this.state;
 
     const containerStyle = this.getContainerSize();
 
-    const imgStyle = Object.assign({
-      maxWidth: width,
-      maxHeight: width,
-    }, this.getTransform());
+    const imgStyle = this.getImageStyle();
 
     const wallStyle = {width, height: width};
 
@@ -104,7 +145,7 @@ export default class PlaceImage extends Component {
           <a href='#' onClick={onClickDelete} className='place-image__delete-button'>삭제</a>
         }
 
-        {!orientation &&
+        {this.isNeededWall() &&
           <div className='place-image__wall' style={wallStyle}></div>
         }
       </div>

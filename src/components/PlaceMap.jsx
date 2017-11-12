@@ -14,6 +14,7 @@ export default class PlaceMap extends Component {
   render() {
     const {
       className,
+      children,
       places,
       initialPlaces,
       activePlaceId,
@@ -65,6 +66,8 @@ export default class PlaceMap extends Component {
           onChangePlaceName={onChangePlaceName}
           onChangePlaceOrder={onChangePlaceOrder}
           />
+
+        {children}
       </div>
     );
   }

@@ -10,7 +10,7 @@ export default class LoadingIndicator extends Component {
       position: 'absolute',
       top: 10,
       right: 10,
-      color: 'darkgray'
+      color: 'green'
     },
   };
 
@@ -33,7 +33,7 @@ export default class LoadingIndicator extends Component {
           height: '100%'
         }}>
 
-        <Icon name={iconName} size='2x' style={iconStyle} />
+        <Icon name={iconName} size='4x' style={iconStyle} />
       </div>
     );
   }
