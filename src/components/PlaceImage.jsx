@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import LazyLoad from 'react-lazyload';
 import EXIF from 'exif-js';
 import exif2css from 'exif2css';
 
@@ -133,13 +134,15 @@ export default class PlaceImage extends Component {
 
     return (
       <div className='place-image' style={containerStyle} >
-        <img
-          src={src}
-          ref={i => this.el = i}
-          className='place-image__img'
-          onLoad={this.handleLoadImage}
-          style={imgStyle}
-          />
+        <LazyLoad height={200}>
+          <img
+            src={src}
+            ref={i => this.el = i}
+            className='place-image__img'
+            onLoad={this.handleLoadImage}
+            style={imgStyle}
+            />
+        </LazyLoad>
 
         {onClickDelete &&
           <a href='#' onClick={onClickDelete} className='place-image__delete-button'>삭제</a>

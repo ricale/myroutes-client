@@ -71,7 +71,7 @@ export default class DaumMap extends Component {
     }
 
     if(selectedPlaceIndex !== newSelectedPlaceIndex) {
-      if(!newSelectedPlaceIndex) {
+      if(newSelectedPlaceIndex === undefined) {
         this.hideSelectedPlaceMarker();
       } else {
         this.showSelectedPlaceMarker(this.markers[newSelectedPlaceIndex].getPosition());
