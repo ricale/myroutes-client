@@ -92,18 +92,32 @@ export default class PlaceList extends Component {
       ...attrs
     } = this.props;
 
+    const placeCountInARow = 7;
+    const placeCount = (places || []).length;
+    const rowCount = placeCount % placeCountInARow === 0 ?
+      (placeCount / placeCountInARow) :
+      (parseInt(placeCount / placeCountInARow, 10) + 1);
+
+    const placeRows = [...Array(rowCount).keys()].map(i =>
+      (places || []).slice(i * placeCountInARow, (i + 1) * placeCountInARow)
+    )
+
     return (
       <div {...attrs} className={`place-list ${className || ''}`}>
-        {(places || []).map((p,i) => 
-          <Place
-            key={`place-${i}`}
-            place={p}
-            active={this.isActive(p.id)}
-            onClick={this.handleClickItem}
-            onChangeName={(event) => onChangePlaceName(i, event.target.value)}
-            onChangeOrder={(direction) => onChangePlaceOrder(i, direction)}
-            editable={editable}
-            />
+        {placeRows.map((r,h) =>
+          <div className='place-list__row' key={`place-list__row-${h}`}>
+            {r.map((p,i) =>
+              <Place
+                key={`place-${i}`}
+                place={p}
+                active={this.isActive(p.id)}
+                onClick={this.handleClickItem}
+                onChangeName={(event) => onChangePlaceName(i, event.target.value)}
+                onChangeOrder={(direction) => onChangePlaceOrder(i, direction)}
+                editable={editable}
+                />
+            )}
+          </div>
         )}
       </div>
     )
