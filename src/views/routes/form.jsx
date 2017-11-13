@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
 import PlaceMap from 'components/PlaceMap';
+import IconButton from 'components/IconButton';
 
 export default class RouteForm extends Component {
   constructor(props) {
@@ -133,7 +134,7 @@ export default class RouteForm extends Component {
           />
 
         <div>
-          <button onClick={this.handleSubmit}>저장</button>
+          <IconButton onClick={this.handleSubmit} iconName='save' />
         </div>
       </div>
     ) 

@@ -3,6 +3,8 @@ import LazyLoad from 'react-lazyload';
 import EXIF from 'exif-js';
 import exif2css from 'exif2css';
 
+import IconButton from 'components/IconButton';
+
 import './PlaceImage.less'
 
 export default class PlaceImage extends Component {
@@ -145,7 +147,7 @@ export default class PlaceImage extends Component {
         </LazyLoad>
 
         {onClickDelete &&
-          <a href='#' onClick={onClickDelete} className='place-image__delete-button'>삭제</a>
+          <IconButton onClick={onClickDelete} className='place-image__delete-button' iconName='remove' />
         }
 
         {this.isNeededWall() &&

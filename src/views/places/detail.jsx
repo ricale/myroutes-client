@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
 import numeral from 'numeral';
 
 import {fetchPlace, addPlaceImage, deletePlaceImage} from 'actions/places';
 import pathHelper from 'utils/pathHelper'
 import PlaceImage from 'components/PlaceImage';
+import IconButton from 'components/IconButton';
 
 import './detail.less';
 
@@ -75,7 +75,7 @@ class PlaceDetail extends Component {
             multiple='true'
             accept=".jpg, .jpeg, .png, .gif"
             onChange={this.handleChangeFile} />
-          <Link to={pathHelper.routes.detail(place.route_id)}>뒤로</Link>
+          <IconButton to={pathHelper.routes.detail(place.route_id)} iconName='arrow-left' />
         </div>
 
         <div className='place-detail__images'>

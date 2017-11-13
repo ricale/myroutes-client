@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
 import {push} from 'react-router-redux';
 
 import {fetchRoute, deleteRoute} from 'actions/routes';
@@ -8,6 +7,7 @@ import {fetchPlace} from 'actions/places';
 
 import PlaceMap from 'components/PlaceMap';
 import PlaceImage from 'components/PlaceImage';
+import IconButton from 'components/IconButton';
 import pathHelper from 'utils/pathHelper';
 
 import './detail.less';
@@ -89,8 +89,12 @@ class RouteDetail extends Component {
         <div className='route-detail__header'>
           <h2 className='route-detail__name'>{route.name}</h2>
           <ul className='route-detail__menu'>
-            <li><Link to={pathHelper.routes.edit(route.id)}>수정</Link></li>
-            <li><a href='#' onClick={this.handleClickDelete}>삭제</a></li>
+            <li>
+              <IconButton to={pathHelper.routes.edit(route.id)} iconName='edit'/>
+            </li>
+            <li>
+              <IconButton onClick={this.handleClickDelete} iconName='remove' />
+            </li>
           </ul>
         </div>
 
@@ -105,7 +109,7 @@ class RouteDetail extends Component {
             searchable={false}
             hasPath={true}
             >
-            <button className='route-detail__show-all-image-button' onClick={this.handleClickShowAllImages}>모든 이미지 보기</button>
+            <IconButton onClick={this.handleClickShowAllImages} className='route-detail__show-all-image-button' iconName='photo' />
           </PlaceMap>
 
           {this.hasActivePlace() &&

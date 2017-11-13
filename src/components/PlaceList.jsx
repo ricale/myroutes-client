@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import numeral from 'numeral';
 
 import Icon from 'components/Icon';
+import IconButton from 'components/IconButton';
 import pathHelper from 'utils/pathHelper';
 
 import './placeList.less'
@@ -42,7 +43,12 @@ class Place extends Component {
         </div>
         <div className='place-list__place-address'>{place.address}</div>
         <div className='place-list__place-position'>{`${numeral(place.latitude).format('0.000')},${numeral(place.longitude).format('0.000')}`}</div>
-        <Link to={pathHelper.places.detail(place.route_id, place.id)}>상세</Link>
+        {!editable &&
+          <IconButton to={pathHelper.places.detail(place.route_id, place.id)} iconName='edit'/>
+        }
+        {editable &&
+          <IconButton onClick={(event) => event.preventDefault()} iconName='remove'/>
+        }
         {editable &&
           <span className='place-list__place-button up' onClick={this.handleClickUp}>
             <Icon name='arrow-up white' />
@@ -65,7 +71,8 @@ export default class PlaceList extends Component {
   }
 
   handleClickItem(event, place) {
-    this.props.onClickItem(event, place);
+    const {onClickItem} = this.props;
+    onClickItem && onClickItem(event, place);
   }
 
   isActive(id) {

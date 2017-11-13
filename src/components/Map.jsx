@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import IconButton from 'components/IconButton';
+
 import './Map.less';
 
 export default class DaumMap extends Component {
@@ -418,7 +420,7 @@ export default class DaumMap extends Component {
               onKeyPress={this.handlePressKeyOnKeywordInput}
               className='map__search-input'
               />
-            <button onClick={this.handleSearch} className='map__search-button'>검색</button>
+            <IconButton onClick={this.handleSearch} iconName='search' />
             <div className='map__search-result'>
               <ul>
                 {searchResult.map((r,i) =>

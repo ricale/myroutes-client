@@ -16,6 +16,8 @@ import EditRoute   from 'views/routes/edit';
 
 import PlaceDetail from 'views/places/detail';
 
+import './Root.less';
+
 export default class Root extends Component {
   render() {
     const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
