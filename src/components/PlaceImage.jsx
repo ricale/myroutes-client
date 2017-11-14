@@ -12,13 +12,16 @@ export default class PlaceImage extends Component {
     width: 300,
     wall: true,
     loaded: false,
-    correctImageOrientation: false
+    correctImageOrientation: false,
+    showOriginal: false
   };
 
   constructor(props) {
     super(props);
     this.state = {};
     this.handleLoadImage = this.handleLoadImage.bind(this);
+    this.handleClickImage = this.handleClickImage.bind(this);
+    this.handleClickOriginalImage = this.handleClickOriginalImage.bind(this);
   }
 
   componentWillMount() {
@@ -52,6 +55,20 @@ export default class PlaceImage extends Component {
     });
   }
 
+  handleClickImage() {
+    const {originalSrc} = this.props;
+
+    if(!originalSrc) {
+      return;
+    }
+
+    this.setState({showOriginal: true});
+  }
+
+  handleClickOriginalImage() {
+    this.setState({showOriginal: false});
+  }
+
   isRotated90Degrees() {
     const {orientation} = this.state;
     return orientation >= 5;
@@ -76,12 +93,16 @@ export default class PlaceImage extends Component {
   }
 
   getImageStyle() {
-    const {width, correctImageOrientation} = this.props;
+    const {width, correctImageOrientation, originalSrc} = this.props;
 
     const style = {
       maxWidth: width,
       maxHeight: width,
     };
+
+    if(originalSrc) {
+      style.cursor = 'pointer';
+    }
 
     if(!correctImageOrientation) {
       return style;
@@ -108,9 +129,11 @@ export default class PlaceImage extends Component {
       return {width, height: width};
     }
 
-    const length = imageWidth > imageHeight ? imageWidth : imageHeight;
-    const paddingTop  = imageWidth > imageHeight ? (imageWidth - imageHeight) / 2 : 0;
-    const paddingLeft = imageWidth > imageHeight ? 0 : (imageHeight - imageWidth) / 2;
+    const isLandscape = imageWidth > imageHeight;
+
+    const length = isLandscape ? imageWidth : imageHeight;
+    const paddingTop  = isLandscape ? (imageWidth - imageHeight) / 2 : 0;
+    const paddingLeft = isLandscape ? 0 : (imageHeight - imageWidth) / 2;
 
     return {
       width:  length,
@@ -120,13 +143,30 @@ export default class PlaceImage extends Component {
     }
   }
 
+  getOriginalImgWrapperClassName() {
+    const defaultClassName = 'place-image__original-img-wrapper';
+    const {
+      imageWidth,
+      imageHeight,
+    } = this.state;
+
+    const orientationClassName = ((w, h) => w - h > 0 ? 'landscape' : 'portrait')(imageWidth, imageHeight);
+
+    return `${defaultClassName} ${orientationClassName}`;
+  }
+
   render() {
     const {
       src,
       onClickDelete,
       width,
-      correctImageOrientation
+      correctImageOrientation,
+      originalSrc
     } = this.props;
+
+    const {
+      showOriginal
+    } = this.state;
 
     const containerStyle = this.getContainerSize();
 
@@ -136,12 +176,13 @@ export default class PlaceImage extends Component {
 
     return (
       <div className='place-image' style={containerStyle} >
-        <LazyLoad height={200}>
+        <LazyLoad offset={400}>
           <img
             src={src}
             ref={i => this.el = i}
             className='place-image__img'
             onLoad={this.handleLoadImage}
+            onClick={this.handleClickImage}
             style={imgStyle}
             />
         </LazyLoad>
@@ -152,6 +193,15 @@ export default class PlaceImage extends Component {
 
         {this.isNeededWall() &&
           <div className='place-image__wall' style={wallStyle}></div>
+        }
+
+        {showOriginal &&
+          <div className={this.getOriginalImgWrapperClassName()} onClick={this.handleClickOriginalImage}>
+            <img
+              src={originalSrc}
+              className='place-image__original-img'
+              />
+          </div>
         }
       </div>
     );

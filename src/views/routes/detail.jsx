@@ -117,6 +117,7 @@ class RouteDetail extends Component {
               <PlaceImage
                 width={128}
                 src={`http://localhost:5000${img.thumbnail2url}`}
+                originalSrc={`http://localhost:5000${img.url}`}
                 key={`img-${img.id}`}
                 />
             )
@@ -127,6 +128,7 @@ class RouteDetail extends Component {
               <PlaceImage
                 width={128}
                 src={`http://localhost:5000${img.thumbnail2url}`}
+                originalSrc={`http://localhost:5000${img.url}`}
                 key={`img-${img.id}`}
                 />
             )
