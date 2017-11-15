@@ -4,11 +4,16 @@ import {Link} from 'react-router-dom';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import IconButton from 'components/IconButton';
-import pathHelper from 'utils/pathHelper'
+import GoogleSession from 'components/GoogleSession';
+import pathHelper from 'utils/pathHelper';
 
 import './Header.less';
 
 class Header extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     const {loading} = this.props;
 
@@ -18,6 +23,9 @@ class Header extends Component {
         <ul className='header__menu'>
           <li>
             <IconButton to={pathHelper.routes.new()} iconName='plus' />
+            <GoogleSession
+              clientId='891848771699-7vgvpu31bp20tqfmtk66b72ukusqfumt.apps.googleusercontent.com'
+              />
           </li>
         </ul>
 
