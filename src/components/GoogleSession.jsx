@@ -53,8 +53,8 @@ export default class GoogleSession extends Component {
 
     this.setState({loggedIn: true});
 
-    const {onSuccess} = this.props;
-    onSuccess && onSuccess(res);
+    const {onSuccessLogin} = this.props;
+    onSuccessLogin && onSuccessLogin(res);
   }
 
   loadGoogleApi(onload) {

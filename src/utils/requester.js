@@ -24,7 +24,8 @@ function _fetch(url, actions, options = {}) {
       headers: {
         'Content-Type': contentType || 'application/json',
         'Accept-Language': 'ko-kr'
-      }
+      },
+      credentials: 'include',
     };
     method && (fetchOptions.method = method);
     body   && (fetchOptions.body   = body);
