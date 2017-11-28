@@ -165,6 +165,9 @@ export default class DaumMap extends Component {
   }
 
   initPath() {
+    if(!this.hasPlaces()) {
+      return;
+    }
     this.path = new daum.maps.Polyline({
       map: this.map,
       path: this.markers.map(m => m.getPosition()),
@@ -224,6 +227,11 @@ export default class DaumMap extends Component {
 
     this.map.setBounds(bounds);
     this.setState({searchResult: places});
+  }
+
+  hasPlaces(props = this.props) {
+    const {initialPlaces, places} = props;
+    return (initialPlaces || places || []).length > 0;
   }
 
   displayInfoWindow(marker, title) {
