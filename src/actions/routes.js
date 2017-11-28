@@ -1,5 +1,7 @@
 import {createActions} from 'redux-actions';
 import {normalize} from 'normalizr';
+
+import {afterFailure} from './commons';
 import requester from 'utils/requester';
 
 const actions = createActions({
@@ -31,6 +33,12 @@ const actions = createActions({
     }
   }
 });
+
+Object.keys(actions).forEach(modelName =>
+  Object.keys(actions[modelName]).forEach(actionName =>
+    actions[modelName][actionName]['afterFailure'] = afterFailure
+  )
+);
 
 export function fetchRouteList() {
   return requester.fetch(

@@ -1,4 +1,6 @@
 export default {
+  index: () => '/',
+
   routes: {
     list:   ()   => `/routes`,
     new:    ()   => `/routes/new`,

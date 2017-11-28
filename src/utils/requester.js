@@ -4,12 +4,32 @@ function checkStatus(response) {
   } else {
     const error = new Error(response.statusText);
     error.response = response;
+    error.status = response.status
     throw error;
   }
 }
 
 function parseJson(response) {
   return response.json();
+}
+
+function getErrorHandler(dispatch, actions) {
+  const dispatchActions = (result) => {
+    dispatch(actions.failure(result));
+    actions.afterFailure && dispatch(actions.afterFailure(result));
+  };
+
+  return (error) => {
+    const {status, response} = error;
+    if(response && response.json) {
+      response.json().then(({message}) =>
+        dispatchActions({status, message})
+      );
+
+    } else {
+      dispatchActions({status});
+    }
+  }
 }
 
 function _fetch(url, actions, options = {}) {
@@ -35,18 +55,7 @@ function _fetch(url, actions, options = {}) {
       .then(checkStatus)
       .then(parseJson)
       .then(json => dispatch(actions.success(json)))
-      .catch(error => {
-        if(error.response && error.response.json) {
-          error.response.json().then(json => {
-            console.error('error', json.message);
-            return dispatch(actions.failure(json.message));
-          });
-
-        } else {
-          console.error('error', error);
-          dispatch(actions.failure(error));
-        }
-      });
+      .catch(getErrorHandler(dispatch, actions));
   }
 }
 
