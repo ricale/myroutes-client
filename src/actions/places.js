@@ -1,30 +1,27 @@
-import {createActions} from 'redux-actions';
 import {normalize} from 'normalizr';
 import requester from '../utils/requester';
+
+import {createActions} from 'utils/createActions';
 
 const actions = createActions({
   PLACES: {
     FETCH: {
       REQUEST: () => ({current: {}}),
       SUCCESS: (response) => ({current: response.data}),
-      FAILURE: () => ({})
     },
     UPDATE: {
       REQUEST: () => ({}),
       SUCCESS: (response) => ({current: response.data}),
-      FAILURE: () => ({})
+    }
+  },
+  PLACE_IMAGES: {
+    CREATE: {
+      REQUEST: () => ({}),
+      SUCCESS: () => ({}),
     },
-    IMAGES: {
-      CREATE: {
-        REQUEST: () => ({}),
-        SUCCESS: () => ({}),
-        FAILURE: () => ({})
-      },
-      DELETE: {
-        REQUEST: () => ({}),
-        SUCCESS: () => ({}),
-        FAILURE: () => ({})
-      }
+    DELETE: {
+      REQUEST: () => ({}),
+      SUCCESS: () => ({}),
     }
   }
 });
@@ -47,7 +44,7 @@ export function fetchPlace(id) {
 export function addPlaceImage(id, body) {
   return requester.fetch(
     `/places/${id}/images`,
-    actions.places.images.create,
+    actions.placeImages.create,
     {method: 'POST', body}
   );
 }
@@ -55,7 +52,7 @@ export function addPlaceImage(id, body) {
 export function deletePlaceImage(imageId) {
   return requester.fetch(
     `/place_images/${imageId}`,
-    actions.places.images.delete,
+    actions.placeImages.delete,
     {method: 'DELETE'}
   );
 }

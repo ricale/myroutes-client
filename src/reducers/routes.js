@@ -9,10 +9,6 @@ export function routes(state = initState, action) {
     case 'ROUTES/FETCH/SUCCESS':
       return Object.assign({}, state, action.payload);
 
-
-    case 'ROUTES/FETCH/FAILURE':
-      return state;
-
     default:
       return state;
   }
