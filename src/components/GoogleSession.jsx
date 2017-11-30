@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import IconButton from 'components/IconButton';
+
 export default class GoogleSession extends Component {
   constructor(props) {
     super(props);
@@ -97,8 +99,8 @@ export default class GoogleSession extends Component {
     const {loggedIn} = this.state;
     return (
       <span>
-        {!loggedIn && <a href='#' onClick={this.signIn}>Login</a>}
-        {loggedIn && <a href='#' onClick={this.signOut}>Logout</a>}
+        {!loggedIn && <IconButton onClick={this.signIn} iconName='sign-in' />}
+        {loggedIn && <IconButton onClick={this.signOut} iconName='sign-out' />}
       </span>
     );
   }

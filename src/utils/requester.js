@@ -15,8 +15,10 @@ function parseJson(response) {
 
 function getErrorHandler(dispatch, actions) {
   const dispatchActions = (result) => {
-    dispatch(actions.failure(result));
-    actions.afterFailure && dispatch(actions.afterFailure(result));
+    const {beforeFailure, failure, afterFailure} = actions;
+    beforeFailure && dispatch(beforeFailure(result));
+    dispatch(failure(result));
+    afterFailure && dispatch(afterFailure(result));
   };
 
   return (error) => {
@@ -54,7 +56,12 @@ function _fetch(url, actions, options = {}) {
     return fetch(`http://localhost:5000${url}`, fetchOptions)
       .then(checkStatus)
       .then(parseJson)
-      .then(json => dispatch(actions.success(json)))
+      .then(json => {
+        const {beforeSuccess, success, afterSuccess} = actions;
+        beforeSuccess && dispatch(beforeSuccess());
+        dispatch(success(json))
+        afterSuccess && dispatch(afterSuccess());
+      })
       .catch(getErrorHandler(dispatch, actions));
   }
 }

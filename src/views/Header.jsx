@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {push} from 'react-router-redux';
 import {Link} from 'react-router-dom';
 
 import LoadingIndicator from 'components/LoadingIndicator';
-import IconButton from 'components/IconButton';
-import GoogleSession from 'components/GoogleSession';
-import pathHelper from 'utils/pathHelper';
+import IconButton       from 'components/IconButton';
+import GoogleSession    from 'components/GoogleSession';
+import Message          from 'components/Message';
+import pathHelper       from 'utils/pathHelper';
 
 import {login, logout} from 'actions/users';
 
@@ -28,7 +30,10 @@ class Header extends Component {
   }
 
   handleSuccessGoogleLogout() {
-    this.props.logout();
+    const {logout, goToIndex} = this.props;
+    logout().then(() =>
+      goToIndex()
+    );
   }
 
   render() {
@@ -48,9 +53,10 @@ class Header extends Component {
           </li>
         </ul>
 
-        <p className='header__message'>
-          {message}
-        </p>
+        <Message
+          className='header__message'
+          message={message}
+          />
 
         <LoadingIndicator show={loading} />
       </div>
@@ -68,7 +74,9 @@ function mapDispatchToProps(dispatch) {
     login: (...args) =>
       dispatch(login(...args)),
     logout: (...args) =>
-      dispatch(logout(...args))
+      dispatch(logout(...args)),
+    goToIndex: (...args) =>
+      dispatch(push(pathHelper.index()))
   };
 }
 

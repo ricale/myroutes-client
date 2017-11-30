@@ -1,22 +1,28 @@
-import {createActions} from 'redux-actions';
 import {normalize} from 'normalizr';
-import requester from '../utils/requester';
+import {push} from 'react-router-redux';
+
+import {createActions} from 'utils/createActions';
+import requester from 'utils/requester';
+import pathHelper from 'utils/pathHelper';
 
 const actions = createActions({
   USERS: {
     LOGIN: {
       REQUEST: () => ({}),
-      SUCCESS: () => ({}),
-      FAILURE: () => ({})
+      SUCCESS: (response) => ({
+        current: response.data,
+        message: 'you are successfully logged in.'
+      }),
     },
 
     LOGOUT: {
       REQUEST: () => ({}),
-      SUCCESS: () => ({}),
-      FAILURE: () => ({})
+      SUCCESS: () => ({message: 'you are successfully logged out.'}),
     },
   }
 });
+
+actions.users.login.beforeSuccess = () => push(pathHelper.routes.list());
 
 export function login(data) {
   return requester.fetch(

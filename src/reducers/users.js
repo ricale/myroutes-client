@@ -5,7 +5,7 @@ const initState = {
 export function users(state = initState, action) {
   switch(action.type) {
     case 'USERS/LOGIN/SUCCESS':
-      return Object.assign({}, state, action.payload);
+      return Object.assign({}, state, {current: action.payload.current});
 
     case 'USERS/LOGOUT/SUCCESS':
       return Object.assign({}, state, {current: {}});
