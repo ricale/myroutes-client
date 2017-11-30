@@ -5,6 +5,11 @@ import Fade from 'components/Fade';
 import './Message.less';
 
 export default class Message extends Component {
+  static defaultProps = {
+    duration: 3000,
+    animationDuration: 3000,
+  };
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -12,12 +17,18 @@ export default class Message extends Component {
 
   componentWillReceiveProps(newProps) {
     const {message} = this.props;
-    const {message: newMessage} = newProps;
+    const {
+      message: newMessage,
+      duration: newDuration
+    } = newProps;
 
     if(message !== newMessage) {
       this.setState({show: true}, () => {
         clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => this.setState({show: false}), 1000)
+        this.timeout = setTimeout(
+          () => this.setState({show: false}),
+          newDuration
+        )
       });
     }
   }
@@ -26,13 +37,18 @@ export default class Message extends Component {
     clearTimeout(this.timeout);
   }
 
+  getClassName() {
+    const {className, type} = this.props;
+    return `message message_${type} ${className}`;
+  }
+
   render() {
-    const {message, className} = this.props;
+    const {message, type, animationDuration} = this.props;
     const {show} = this.state;
 
     return (
-      <div className={`message ${className}`}>
-        <Fade show={show} string={message} />
+      <div className={this.getClassName()}>
+        <Fade show={show} string={message} duration={animationDuration} />
       </div>
     );
   }

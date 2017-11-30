@@ -11,18 +11,22 @@ const actions = createActions({
       REQUEST: () => ({}),
       SUCCESS: (response) => ({
         current: response.data,
-        message: 'you are successfully logged in.'
+        message: 'you are successfully logged in.',
+        messageType: 'success'
       }),
     },
 
     LOGOUT: {
       REQUEST: () => ({}),
-      SUCCESS: () => ({message: 'you are successfully logged out.'}),
+      SUCCESS: () => ({
+        message: 'you are successfully logged out.',
+        messageType: 'error'
+      }),
     },
   }
 });
 
-actions.users.login.beforeSuccess = () => push(pathHelper.routes.list());
+actions.users.login.afterSuccess = () => push(pathHelper.routes.list());
 
 export function login(data) {
   return requester.fetch(

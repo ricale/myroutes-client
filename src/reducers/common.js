@@ -25,10 +25,13 @@ export function common(state = initialState, action) {
                   (isSuccess ? -1 : 0) +
                   (isFailure ? -1 : 0);
 
-  const {message} = (action.payload || {});
+  const {message, messageType} = (action.payload || {});
 
   const newState = {loading};
-  !!message && (newState.message = message);
+  if(!!message) {
+    newState.message     = message;
+    newState.messageType = messageType;
+  }
 
   return Object.assign({}, state, newState);
 }

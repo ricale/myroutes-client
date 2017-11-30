@@ -37,7 +37,7 @@ class Header extends Component {
   }
 
   render() {
-    const {loading, message} = this.props;
+    const {loading, message, messageType} = this.props;
 
     return (
       <div className='header'>
@@ -56,6 +56,7 @@ class Header extends Component {
         <Message
           className='header__message'
           message={message}
+          type={messageType}
           />
 
         <LoadingIndicator show={loading} />
@@ -65,8 +66,8 @@ class Header extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const {loading, message} = state.common;
-  return {loading, message};
+  const {loading, message, messageType} = state.common;
+  return {loading, message, messageType};
 }
 
 function mapDispatchToProps(dispatch) {
