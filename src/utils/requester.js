@@ -13,12 +13,39 @@ function parseJson(response) {
   return response.json();
 }
 
+function getSuccessCallback(dispatch, actions) {
+  return (json) => {
+    const {beforeSuccess, success, afterSuccess} = actions;
+
+    if(beforeSuccess) {
+      dispatch(beforeSuccess());
+    }
+
+    const dispatchResult = dispatch(success(json));
+
+    if(afterSuccess) {
+      dispatch(afterSuccess());
+    }
+
+    return dispatchResult;
+  }
+}
+
 function getErrorHandler(dispatch, actions) {
   const dispatchActions = (result) => {
     const {beforeFailure, failure, afterFailure} = actions;
-    beforeFailure && dispatch(beforeFailure(result));
-    dispatch(failure(result));
-    afterFailure && dispatch(afterFailure(result));
+
+    if(beforeFailure) {
+      dispatch(beforeFailure(result));
+    }
+
+    const dispatchResult = dispatch(failure(result));
+
+    if(afterFailure) {
+      dispatch(afterFailure(result));
+    }
+
+    return dispatchResult;
   };
 
   return (error) => {
@@ -56,12 +83,7 @@ function _fetch(url, actions, options = {}) {
     return fetch(`http://localhost:5000${url}`, fetchOptions)
       .then(checkStatus)
       .then(parseJson)
-      .then(json => {
-        const {beforeSuccess, success, afterSuccess} = actions;
-        beforeSuccess && dispatch(beforeSuccess());
-        dispatch(success(json))
-        afterSuccess && dispatch(afterSuccess());
-      })
+      .then(getSuccessCallback(dispatch, actions))
       .catch(getErrorHandler(dispatch, actions));
   }
 }
