@@ -26,8 +26,6 @@ const actions = createActions({
   }
 });
 
-actions.users.login.afterSuccess = () => push(pathHelper.routes.list());
-
 export function login(data) {
   return requester.fetch(
     `/login`,

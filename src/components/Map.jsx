@@ -58,7 +58,7 @@ export default class DaumMap extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const {places, selectedPlaceIndex} = this.props;
+    const {places, selectedPlaceIndex, markable} = this.props;
     const {
       places: newPlaces,
       selectedPlaceIndex: newSelectedPlaceIndex
@@ -72,11 +72,13 @@ export default class DaumMap extends Component {
       this.initPath();
     }
 
-    if(selectedPlaceIndex !== newSelectedPlaceIndex) {
-      if(newSelectedPlaceIndex === undefined) {
-        this.hideSelectedPlaceMarker();
-      } else {
-        this.showSelectedPlaceMarker(this.markers[newSelectedPlaceIndex].getPosition());
+    if(!markable) {
+      if(selectedPlaceIndex !== newSelectedPlaceIndex) {
+        if(newSelectedPlaceIndex === undefined) {
+          this.hideSelectedPlaceMarker();
+        } else {
+          this.showSelectedPlaceMarker(this.markers[newSelectedPlaceIndex].getPosition());
+        }
       }
     }
   }
@@ -293,15 +295,15 @@ export default class DaumMap extends Component {
   addPlaceMarker(position, options = {}) {
     const {markable, onCreateMarker} = this.props;
 
+    const image = !markable && (new daum.maps.MarkerImage(
+      'public/images/red-circle.png',
+      new daum.maps.Size(10, 10), {
+        offset: new daum.maps.Point(5, 5)
+      }
+    ));
+
     const marker = this.createMarker(
-      Object.assign({}, position, {
-        image: !markable && new daum.maps.MarkerImage(
-          'public/images/red-circle.png',
-          new daum.maps.Size(10, 10), {
-            offset: new daum.maps.Point(5, 5)
-          }
-        )
-      })
+      Object.assign({image}, position)
     );
 
     this.markers.push(marker);
