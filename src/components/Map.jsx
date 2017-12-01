@@ -157,7 +157,7 @@ export default class DaumMap extends Component {
     const bounds = new daum.maps.LatLngBounds();
 
     (places || []).forEach(m => {
-      this.addPlaceMarker(m, {noCallback: true, name: m.name});
+      this.addPlaceMarker(m, {noCallback: true});
       bounds.extend(this.markers[this.currentMarkerIndex].getPosition());
     });
 
@@ -256,7 +256,7 @@ export default class DaumMap extends Component {
     }, options));
   }
 
-  addEventListenerToMarker(marker, index, options) {
+  addEventListenerToMarker(marker, index) {
     if(this.props.markable) {
       daum.maps.event.addListener(marker, 'dragstart', () => this.currentMarkerIndex = index);
       daum.maps.event.addListener(marker, 'dragend',   () => {
@@ -283,9 +283,10 @@ export default class DaumMap extends Component {
       onClickMarker && onClickMarker(null, places[index]);
     });
 
-    daum.maps.event.addListener(marker, 'mouseover', () =>
-      this.displayInfoWindow(marker, options.name)
-    );
+    daum.maps.event.addListener(marker, 'mouseover', () => {
+      const {places} = this.props;
+      this.displayInfoWindow(marker, places[index].name);
+    });
 
     daum.maps.event.addListener(marker, 'mouseout', () =>
       this.infoWindow.close()
@@ -295,12 +296,13 @@ export default class DaumMap extends Component {
   addPlaceMarker(position, options = {}) {
     const {markable, onCreateMarker} = this.props;
 
-    const image = !markable && (new daum.maps.MarkerImage(
-      'public/images/red-circle.png',
-      new daum.maps.Size(10, 10), {
-        offset: new daum.maps.Point(5, 5)
-      }
-    ));
+    const image = !markable && (
+      new daum.maps.MarkerImage(
+        'public/images/red-circle.png',
+        new daum.maps.Size(10, 10),
+        {offset: new daum.maps.Point(5, 5)}
+      )
+    );
 
     const marker = this.createMarker(
       Object.assign({image}, position)
@@ -310,7 +312,7 @@ export default class DaumMap extends Component {
     const index = this.markers.length - 1
     this.currentMarkerIndex = index;
 
-    this.addEventListenerToMarker(marker, index, options);
+    this.addEventListenerToMarker(marker, index);
 
     if(!options.noCallback && onCreateMarker) {
       const latlng = marker.getPosition();
@@ -362,7 +364,7 @@ export default class DaumMap extends Component {
 
     if(markable) {
       daum.maps.event.addListener(marker, 'rightclick', () =>
-        this.addPlaceMarker({latlng: marker.getPosition()}, {name: place.place_name})
+        this.addPlaceMarker({latlng: marker.getPosition()})
       );
     }
 
