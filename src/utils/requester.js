@@ -83,8 +83,8 @@ function _fetch(url, actions, options = {}) {
     return fetch(`http://localhost:5000${url}`, fetchOptions)
       .then(checkStatus)
       .then(parseJson)
-      .then(getSuccessCallback(dispatch, actions))
-      .catch(getErrorHandler(dispatch, actions));
+      .catch(getErrorHandler(dispatch, actions))
+      .then(getSuccessCallback(dispatch, actions));
   }
 }
 

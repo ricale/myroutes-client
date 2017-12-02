@@ -3,14 +3,18 @@ import {push} from 'react-router-redux';
 
 import pathHelper from 'utils/pathHelper';
 
+function onFailureWithUnknown(data) {
+  return Object.assign({type: 'unknown'}, data);
+};
+
 function onFailureWith401() {
   return push(pathHelper.index());
 }
 
-function afterFailure({status}) {
-  return {
+function afterFailure(data) {
+  return ({
     401: onFailureWith401
-  }[status]();
+  }[data.status] || onFailureWithUnknown)(data);
 }
 
 export function createActions(hash, options = {}) {
