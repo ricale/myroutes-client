@@ -74,7 +74,7 @@ export default class PlaceImage extends Component {
     return orientation >= 5;
   }
 
-  isNeededWall() {
+  isNeedWall() {
     const {wall} = this.props;
     const {loaded} = this.state;
 
@@ -191,9 +191,9 @@ export default class PlaceImage extends Component {
           <IconButton onClick={onClickDelete} className='place-image__delete-button' iconName='remove' />
         }
 
-        {this.isNeededWall() &&
+        {/*this.isNeedWall() &&
           <div className='place-image__wall' style={wallStyle}></div>
-        }
+        */}
 
         {showOriginal &&
           <div className={this.getOriginalImgWrapperClassName()} onClick={this.handleClickOriginalImage}>

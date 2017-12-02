@@ -5,6 +5,7 @@ import numeral from 'numeral';
 import Icon from 'components/Icon';
 import IconButton from 'components/IconButton';
 import pathHelper from 'utils/pathHelper';
+import PlaceImage from 'components/PlaceImage';
 
 import './placeList.less'
 
@@ -34,31 +35,41 @@ class Place extends Component {
 
     return (
       <div className={`${active ? 'active' : ''} place-list__place`} onClick={this.handleClick}>
-        {!editable && !isNaN(place.odr) &&
-          <div className='place-list__place-index'>{place.odr + 1}</div>
-        }
-        <div className='place-list__place-name'>
-          {editable && <input onChange={onChangeName} value={place.name} />}
-          {!editable && place.name}
+        <div className='place-list__place-info' onClick={this.handleClick}>
+          {!editable && !isNaN(place.odr) &&
+            <div className='place-list__place-index'>{place.odr + 1}</div>
+          }
+          <div className='place-list__place-name'>
+            {editable && <input onChange={onChangeName} value={place.name} />}
+            {!editable && place.name}
+          </div>
+          <div className='place-list__place-address'>{place.address}</div>
+          <div className='place-list__place-position'>{`${numeral(place.latitude).format('0.000')},${numeral(place.longitude).format('0.000')}`}</div>
+          {!editable &&
+            <IconButton to={pathHelper.places.detail(place.route_id, place.id)} iconName='edit'/>
+          }
+          {editable &&
+            <IconButton onClick={(event) => event.preventDefault()} iconName='remove'/>
+          }
+          {editable &&
+            <span className='place-list__place-button up' onClick={this.handleClickUp}>
+              <Icon name='arrow-up white' />
+            </span>
+          }
+          {editable &&
+            <span className='place-list__place-button down' onClick={this.handleClickDown}>
+              <Icon name='arrow-down white' />
+            </span>
+          }
         </div>
-        <div className='place-list__place-address'>{place.address}</div>
-        <div className='place-list__place-position'>{`${numeral(place.latitude).format('0.000')},${numeral(place.longitude).format('0.000')}`}</div>
-        {!editable &&
-          <IconButton to={pathHelper.places.detail(place.route_id, place.id)} iconName='edit'/>
-        }
-        {editable &&
-          <IconButton onClick={(event) => event.preventDefault()} iconName='remove'/>
-        }
-        {editable &&
-          <span className='place-list__place-button up' onClick={this.handleClickUp}>
-            <Icon name='arrow-up white' />
-          </span>
-        }
-        {editable &&
-          <span className='place-list__place-button down' onClick={this.handleClickDown}>
-            <Icon name='arrow-down white' />
-          </span>
-        }
+        {(place.images || []).map(img =>
+          <PlaceImage
+            width={128}
+            src={`http://localhost:5000${img.thumbnail2url}`}
+            originalSrc={`http://localhost:5000${img.url}`}
+            key={`img-${img.id}`}
+            />
+        )}
       </div>
     )
   }

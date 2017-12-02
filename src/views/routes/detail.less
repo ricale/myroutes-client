@@ -1,17 +1,28 @@
-.route-detail {
-  .map__map-container {
-    width: 388px;
-    height: 369px;
-  }
-}
-
 .route-detail__header {
   margin-bottom: 10px;
 }
 
 .route-detail__content {
+  .map__map-wrapper {
+    width: 100%;
+  }
+
+  .map__map-container {
+    width: 100%;
+    height: 369px;
+  }
+
   .place-map {
-    float: left;
+    display: flex;
+    flex-direction: column
+  }
+
+  .place-map__map {
+    order: 2;
+  }
+
+  .place-map__place-list {
+    order: 1;
   }
 }
 
@@ -38,10 +49,4 @@
 .route-detail__images {
   display: inline-block;
   vertical-align: top;
-}
-
-.route-detail__show-all-image-button {
-  position: absolute;
-  bottom: 0;
-  left: 363px;
 }
