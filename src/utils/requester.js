@@ -1,3 +1,5 @@
+import {API_HOST} from 'utils/constants';
+
 function checkStatus(response) {
   if(response.status >= 200 && response.status < 300) {
     return response;
@@ -80,7 +82,7 @@ function _fetch(url, actions, options = {}) {
     body   && (fetchOptions.body   = body);
     data   && (fetchOptions.data   = data);
 
-    return fetch(`http://localhost:5000${url}`, fetchOptions)
+    return fetch(`${API_HOST}${url}`, fetchOptions)
       .then(checkStatus)
       .then(parseJson)
       .catch(getErrorHandler(dispatch, actions))

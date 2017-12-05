@@ -4,8 +4,9 @@ import numeral from 'numeral';
 
 import Icon from 'components/Icon';
 import IconButton from 'components/IconButton';
-import pathHelper from 'utils/pathHelper';
 import PlaceImage from 'components/PlaceImage';
+import pathHelper from 'utils/pathHelper';
+import {API_HOST} from 'utils/constants';
 
 import './placeList.less'
 
@@ -65,8 +66,8 @@ class Place extends Component {
         {(place.images || []).map(img =>
           <PlaceImage
             width={128}
-            src={`http://localhost:5000${img.thumbnail2url}`}
-            originalSrc={`http://localhost:5000${img.url}`}
+            src={`${API_HOST}${img.thumbnail2url}`}
+            originalSrc={`${API_HOST}${img.url}`}
             key={`img-${img.id}`}
             />
         )}

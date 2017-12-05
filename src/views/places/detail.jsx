@@ -3,9 +3,10 @@ import {connect} from 'react-redux';
 import numeral from 'numeral';
 
 import {fetchPlace, addPlaceImage, deletePlaceImage} from 'actions/places';
-import pathHelper from 'utils/pathHelper'
 import PlaceImage from 'components/PlaceImage';
 import IconButton from 'components/IconButton';
+import pathHelper from 'utils/pathHelper'
+import {API_HOST} from 'utils/constants';
 
 import './detail.less';
 
@@ -81,7 +82,7 @@ class PlaceDetail extends Component {
         <div className='place-detail__images'>
           {(place.images || []).map(img =>
             <PlaceImage
-              src={`http://localhost:5000${img.thumbnail1url}`}
+              src={`${API_HOST}${img.thumbnail1url}`}
               key={`img-${img.id}`}
               onClickDelete={this.handleClickDeleteImage(img.id)}
               />
