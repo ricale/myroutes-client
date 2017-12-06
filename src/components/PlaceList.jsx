@@ -8,7 +8,7 @@ import PlaceImage from 'components/PlaceImage';
 import pathHelper from 'utils/pathHelper';
 import {API_HOST} from 'utils/constants';
 
-import './placeList.less'
+import './PlaceList.less'
 
 class Place extends Component {
   constructor(props) {
