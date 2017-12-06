@@ -7,11 +7,6 @@ module.exports = {
   entry: {
     index: './src/index.jsx'
   },
-  output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: './dist/'
-  },
   devServer: {
   },
   devtool: "cheap-eval-source-map",
