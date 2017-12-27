@@ -30,21 +30,21 @@ const actions = createActions({
 
 export function fetchRouteList() {
   return requester.fetch(
-    '/routes',
+    '/routes/',
     actions.routes.fetchall
   );
 }
 
 export function fetchRoute(id) {
   return requester.fetch(
-    `/routes/${id}`,
+    `/routes/${id}/`,
     actions.routes.fetch
   );
 }
 
 export function createRoute(data) {
   return requester.fetch(
-    `/routes`,
+    `/routes/`,
     actions.routes.create,
     {method: 'POST', data}
   );
@@ -52,7 +52,7 @@ export function createRoute(data) {
 
 export function updateRoute(id, data) {
   return requester.fetch(
-    `/routes/${id}`,
+    `/routes/${id}/`,
     actions.routes.update,
     {method: 'PUT', data}
   );
@@ -60,7 +60,7 @@ export function updateRoute(id, data) {
 
 export function deleteRoute(id) {
   return requester.fetch(
-    `/routes/${id}`,
+    `/routes/${id}/`,
     actions.routes.delete,
     {method: 'DELETE'}
   );

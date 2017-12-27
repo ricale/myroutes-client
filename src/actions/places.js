@@ -28,7 +28,7 @@ const actions = createActions({
 
 export function fetchPlace(id) {
   return requester.fetch(
-    `/places/${id}`,
+    `/places/${id}/`,
     actions.places.fetch
   );
 }
@@ -43,7 +43,7 @@ export function fetchPlace(id) {
 
 export function addPlaceImage(id, body) {
   return requester.fetch(
-    `/places/${id}/images`,
+    `/places/${id}/images/`,
     actions.placeImages.create,
     {method: 'POST', body}
   );
@@ -51,7 +51,7 @@ export function addPlaceImage(id, body) {
 
 export function deletePlaceImage(imageId) {
   return requester.fetch(
-    `/place_images/${imageId}`,
+    `/place_images/${imageId}/`,
     actions.placeImages.delete,
     {method: 'DELETE'}
   );
