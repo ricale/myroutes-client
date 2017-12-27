@@ -1,3 +1,5 @@
+import Cookie from 'js-cookie';
+
 import {API_HOST} from 'utils/constants';
 
 function checkStatus(response) {
@@ -71,10 +73,13 @@ function _fetch(url, actions, options = {}) {
   return dispatch => {
     dispatch(actions.request());
 
+    const token = Cookie.get('token');
+
     const fetchOptions = {
       headers: {
         'Content-Type': contentType || 'application/json',
-        'Accept-Language': 'ko-kr'
+        'Accept-Language': 'ko-kr',
+        'Authorization': `JWT ${token}`
       },
       credentials: 'include',
     };

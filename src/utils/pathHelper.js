@@ -1,5 +1,6 @@
 export default {
   index: () => '/',
+  login: () => '/login',
 
   routes: {
     list:   ()   => `/routes`,

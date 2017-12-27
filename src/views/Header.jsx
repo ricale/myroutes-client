@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import IconButton       from 'components/IconButton';
-import GoogleSession    from 'components/GoogleSession';
+import Session          from 'components/Session';
 import Message          from 'components/Message';
 import pathHelper       from 'utils/pathHelper';
 
@@ -16,25 +16,25 @@ import './Header.less';
 class Header extends Component {
   constructor(props) {
     super(props);
-    this.handleSuccessGoogleLogin = this.handleSuccessGoogleLogin.bind(this);
-    this.handleSuccessGoogleLogout = this.handleSuccessGoogleLogout.bind(this);
+    // this.handleSuccessGoogleLogin = this.handleSuccessGoogleLogin.bind(this);
+    // this.handleSuccessGoogleLogout = this.handleSuccessGoogleLogout.bind(this);
   }
 
-  handleSuccessGoogleLogin(res) {
-    this.props.login({
-      token:     res.tokenId,
-      google_id: res.googleId,
-      name:      res.profileObj.name,
-      email:     res.profileObj.email,
-    });
-  }
+  // handleSuccessGoogleLogin(res) {
+  //   this.props.login({
+  //     token:     res.tokenId,
+  //     google_id: res.googleId,
+  //     name:      res.profileObj.name,
+  //     email:     res.profileObj.email,
+  //   });
+  // }
 
-  handleSuccessGoogleLogout() {
-    const {logout, goToIndex} = this.props;
-    logout().then(() =>
-      goToIndex()
-    );
-  }
+  // handleSuccessGoogleLogout() {
+  //   const {logout, goToIndex} = this.props;
+  //   logout().then(() =>
+  //     goToIndex()
+  //   );
+  // }
 
   render() {
     const {loading, message, messageType} = this.props;
@@ -45,11 +45,7 @@ class Header extends Component {
         <ul className='header__menu'>
           <li>
             <IconButton to={pathHelper.routes.new()} iconName='plus' />
-            <GoogleSession
-              clientId='891848771699-7vgvpu31bp20tqfmtk66b72ukusqfumt.apps.googleusercontent.com'
-              onSuccessLogin={this.handleSuccessGoogleLogin}
-              onSuccessLogout={this.handleSuccessGoogleLogout}
-              />
+            <Session />
           </li>
         </ul>
 

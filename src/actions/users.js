@@ -1,5 +1,6 @@
 import {normalize} from 'normalizr';
 import {push} from 'react-router-redux';
+import Cookie from 'js-cookie';
 
 import {createActions} from 'utils/createActions';
 import requester from 'utils/requester';
@@ -9,11 +10,13 @@ const actions = createActions({
   USERS: {
     LOGIN: {
       REQUEST: () => ({}),
-      SUCCESS: (response) => ({
-        current: response.data,
-        message: 'you are successfully logged in.',
-        messageType: 'success'
-      }),
+      SUCCESS: (response) => {
+        Cookie.set('token', response.data.token);
+        return {
+          message: 'you are successfully logged in.',
+          messageType: 'success'
+        }
+      },
     },
 
     LOGOUT: {
@@ -28,7 +31,7 @@ const actions = createActions({
 
 export function login(data) {
   return requester.fetch(
-    `/login`,
+    `/login/`,
     actions.users.login,
     {method: 'POST', data}
   );
@@ -36,7 +39,7 @@ export function login(data) {
 
 export function logout() {
   return requester.fetch(
-    `/logout`,
+    `/logout/`,
     actions.users.logout
   );
 }
