@@ -1,6 +1,5 @@
-import Cookie from 'js-cookie';
-
 import {API_HOST} from 'utils/constants';
+import sessionHelper from 'utils/sessionHelper';
 
 function checkStatus(response) {
   if(response.status >= 200 && response.status < 300) {
@@ -73,7 +72,7 @@ function _fetch(url, actions, options = {}) {
   return dispatch => {
     dispatch(actions.request());
 
-    const token = Cookie.get('token');
+    const token = sessionHelper.getToken();
 
     const fetchOptions = {
       headers: {

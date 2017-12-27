@@ -1,6 +1,5 @@
 import {normalize} from 'normalizr';
 import {push} from 'react-router-redux';
-import Cookie from 'js-cookie';
 
 import {createActions} from 'utils/createActions';
 import requester from 'utils/requester';
@@ -11,7 +10,7 @@ const actions = createActions({
     LOGIN: {
       REQUEST: () => ({}),
       SUCCESS: (response) => {
-        Cookie.set('token', response.data.token);
+        sessionHelper.setToken(response.data.token);
         return {
           message: 'you are successfully logged in.',
           messageType: 'success'

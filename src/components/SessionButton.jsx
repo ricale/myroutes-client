@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import IconButton from 'components/IconButton';
 import pathHelper from 'utils/pathHelper';
 
-export default class Session extends Component {
+export default class SessionButton extends Component {
   constructor(props) {
     super(props);
     this.state = {

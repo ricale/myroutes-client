@@ -5,11 +5,11 @@ import {Link} from 'react-router-dom';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import IconButton       from 'components/IconButton';
-import Session          from 'components/Session';
+import SessionButton    from 'components/SessionButton';
 import Message          from 'components/Message';
 import pathHelper       from 'utils/pathHelper';
 
-import {login, logout} from 'actions/users';
+import {logout} from 'actions/users';
 
 import './Header.less';
 
@@ -45,7 +45,7 @@ class Header extends Component {
         <ul className='header__menu'>
           <li>
             <IconButton to={pathHelper.routes.new()} iconName='plus' />
-            <Session />
+            <SessionButton />
           </li>
         </ul>
 
@@ -68,8 +68,6 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    login: (...args) =>
-      dispatch(login(...args)),
     logout: (...args) =>
       dispatch(logout(...args)),
     goToIndex: (...args) =>
