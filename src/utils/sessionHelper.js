@@ -11,5 +11,9 @@ export default {
 
   hasToken: () => {
     return !!Cookie.get('token');
+  },
+
+  removeToken: () => {
+    Cookie.remove('token');
   }
 };

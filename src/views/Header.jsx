@@ -8,6 +8,7 @@ import IconButton       from 'components/IconButton';
 import SessionButton    from 'components/SessionButton';
 import Message          from 'components/Message';
 import pathHelper       from 'utils/pathHelper';
+import sessionHelper    from 'utils/sessionHelper';
 
 import {logout} from 'actions/users';
 
@@ -37,15 +38,17 @@ class Header extends Component {
   // }
 
   render() {
-    const {loading, message, messageType} = this.props;
+    const {loading, message, messageType, hasSession, logout} = this.props;
 
     return (
       <div className='header'>
         <h1><Link to={pathHelper.routes.list()}>myroutes</Link></h1>
         <ul className='header__menu'>
           <li>
-            <IconButton to={pathHelper.routes.new()} iconName='plus' />
-            <SessionButton />
+            {hasSession &&
+              <IconButton to={pathHelper.routes.new()} iconName='plus' />
+            }
+            <SessionButton hasSession={hasSession} logout={logout}/>
           </li>
         </ul>
 
@@ -63,7 +66,8 @@ class Header extends Component {
 
 function mapStateToProps(state, ownProps) {
   const {loading, message, messageType} = state.common;
-  return {loading, message, messageType};
+  const hasSession = sessionHelper.hasToken();
+  return {loading, message, messageType, hasSession};
 }
 
 function mapDispatchToProps(dispatch) {

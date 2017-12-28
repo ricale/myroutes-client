@@ -4,6 +4,7 @@ import {push} from 'react-router-redux';
 
 import {login} from 'actions/users';
 import pathHelper from 'utils/pathHelper';
+import sessionHelper from 'utils/sessionHelper';
 
 class Login extends Component {
   constructor(props) {
@@ -17,6 +18,13 @@ class Login extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentWillMount() {
+    const {hasSession, goToRouteList} = this.props;
+    if(hasSession) {
+      goToRouteList();
+    }
+  }
+
   handleChangeUsername(event) {
     this.setState({username: event.target.value});
   }
@@ -26,9 +34,10 @@ class Login extends Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault();
     const {login, goToRouteList} = this.props;
     const {username, password} = this.state;
-    this.props.login({username, password}).then(() =>
+    login({username, password}).then(() =>
       goToRouteList()
     );
   }
@@ -36,7 +45,7 @@ class Login extends Component {
   render() {
     const {username, password} = this.state;
     return (
-      <div>
+      <form onSubmit={this.handleSubmit}>
         <div>
           <label>아이디</label>
           <input
@@ -55,14 +64,15 @@ class Login extends Component {
             onChange={this.handleChangePassword}
             />
         </div>
-        <button onClick={this.handleSubmit}>submit</button>
-      </div>
+        <button type='submit'>submit</button>
+      </form>
     );
   }
 }
 
 function mapStateToProps(state, ownProps) {
-  return state;
+  const hasSession = sessionHelper.hasToken();
+  return {hasSession};
 }
 
 function mapDispatchToProps(dispatch) {

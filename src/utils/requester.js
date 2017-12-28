@@ -78,13 +78,13 @@ function _fetch(url, actions, options = {}) {
       headers: {
         'Content-Type': contentType || 'application/json',
         'Accept-Language': 'ko-kr',
-        'Authorization': `JWT ${token}`
       },
       credentials: 'include',
     };
     method && (fetchOptions.method = method);
     body   && (fetchOptions.body   = body);
     data   && (fetchOptions.data   = data);
+    token  && (fetchOptions.headers['Authorization'] = `JWT ${token}`)
 
     return fetch(`${API_HOST}${url}`, fetchOptions)
       .then(checkStatus)
