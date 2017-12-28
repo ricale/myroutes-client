@@ -121,6 +121,10 @@ export default class RouteForm extends Component {
             />
         </div>
 
+        <div>
+          <IconButton onClick={this.handleSubmit} iconName='save' />
+        </div>
+
         <PlaceMap
           places={places}
           initialMarkers={initialPlaces}
@@ -132,10 +136,6 @@ export default class RouteForm extends Component {
           onMoveMarker={this.handleMoveMarker}
           onDeleteMarker={this.handleDeleteMarker}
           />
-
-        <div>
-          <IconButton onClick={this.handleSubmit} iconName='save' />
-        </div>
       </div>
     ) 
   }
