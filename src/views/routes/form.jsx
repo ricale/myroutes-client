@@ -38,7 +38,7 @@ export default class RouteForm extends Component {
       longitude
     };
 
-    this.setState({places});
+    this.updatePlaces(places);
   }
 
   handleMoveMarker(index, latitude, longitude) {
@@ -51,7 +51,7 @@ export default class RouteForm extends Component {
     places[index].latitude = latitude;
     places[index].longitude = longitude;
 
-    this.setState({places});
+    this.updatePlaces(places);
   }
 
   handleDeleteMarker(index) {
@@ -63,7 +63,7 @@ export default class RouteForm extends Component {
 
     places.splice(index, 1);
 
-    this.setState({places});
+    this.updatePlaces(places);
   }
 
   handleChangePlaceName(index, name) {
@@ -75,7 +75,7 @@ export default class RouteForm extends Component {
 
     places[index].name = name;
 
-    this.setState({places});
+    this.updatePlaces(places);
   }
 
   handleChangePlaceOrder(index, direction) {
@@ -89,7 +89,13 @@ export default class RouteForm extends Component {
 
     places.splice(destination, 0, spliced);
 
-    this.setState({places});
+    this.updatePlaces(places);
+  }
+
+  handleRemovePlace(index) {
+    const {places} = this.state;
+    places.splice(index, 1);
+    this.updatePlaces(places);
   }
 
   handleSubmit() {
@@ -98,11 +104,15 @@ export default class RouteForm extends Component {
     const data = {
       name,
       places: places.map((p,i) =>
-        Object.assign({order: i}, p)
+        Object.assign({}, p, {odr: i})
       )
     };
 
     onSubmit && onSubmit(data);
+  }
+
+  updatePlaces(places) {
+    this.setState({places: places.slice()})
   }
 
   render() {
@@ -128,10 +138,10 @@ export default class RouteForm extends Component {
         <PlaceMap
           places={places}
           initialMarkers={initialPlaces}
-
           editable={true}
           onChangePlaceName={(i, name) => this.handleChangePlaceName(i, name)}
           onChangePlaceOrder={(i, direction) => this.handleChangePlaceOrder(i, direction)}
+          onRemovePlace={(i) => this.handleRemovePlace(i)}
           onCreateMarker={this.handleCreateMarker}
           onMoveMarker={this.handleMoveMarker}
           onDeleteMarker={this.handleDeleteMarker}

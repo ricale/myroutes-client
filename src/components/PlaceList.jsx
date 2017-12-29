@@ -16,6 +16,8 @@ class Place extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleClickUp = this.handleClickUp.bind(this);
     this.handleClickDown = this.handleClickDown.bind(this);
+    this.handleChangeName = this.handleChangeName.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
   }
 
   handleClick(event) {
@@ -24,15 +26,28 @@ class Place extends Component {
   }
 
   handleClickUp(event) {
-    this.props.onChangeOrder('up');
+    const {onChangeOrder, index} = this.props;
+    onChangeOrder(index, 'up');
   }
 
   handleClickDown(event) {
-    this.props.onChangeOrder('down');
+    const {onChangeOrder, index} = this.props;
+    onChangeOrder(index, 'down');
+  }
+
+  handleChangeName(event) {
+    const {onChangeName, index} = this.props;
+    onChangeName(index, event.target.value);
+  }
+
+  handleRemove(event) {
+    event.preventDefault();
+    const {onRemove, index} = this.props;
+    onRemove(index);
   }
 
   render() {
-    const {place, editable, active, onChangeName} = this.props;
+    const {place, editable, index, active, onChangeName} = this.props;
 
     return (
       <div className={`${active ? 'active' : ''} place-list__place`} onClick={this.handleClick}>
@@ -41,7 +56,7 @@ class Place extends Component {
             <div className='place-list__place-index'>{place.odr + 1}</div>
           }
           <div className='place-list__place-name'>
-            {editable && <input onChange={onChangeName} value={place.name} />}
+            {editable && <input onChange={this.handleChangeName} value={place.name} />}
             {!editable && place.name}
           </div>
           <div className='place-list__place-address'>{place.address}</div>
@@ -50,7 +65,7 @@ class Place extends Component {
             <IconButton to={pathHelper.places.detail(place.route_id, place.id)} iconName='edit'/>
           }
           {editable &&
-            <IconButton onClick={(event) => event.preventDefault()} iconName='remove'/>
+            <IconButton onClick={this.handleRemove} iconName='remove'/>
           }
           {editable &&
             <span className='place-list__place-button up' onClick={this.handleClickUp}>
@@ -89,7 +104,11 @@ export default class PlaceList extends Component {
 
   isActive(id) {
     const {activePlaceId} = this.props;
-    return activePlaceId !== undefined && activePlaceId === id
+    return activePlaceId !== undefined && activePlaceId === id;
+  }
+
+  getIndex(h, i) {
+    return ;
   }
 
   render() {
@@ -100,6 +119,7 @@ export default class PlaceList extends Component {
       onClickItem,
       onChangePlaceName,
       onChangePlaceOrder,
+      onRemovePlace,
       className,
       ...attrs
     } = this.props;
@@ -112,7 +132,7 @@ export default class PlaceList extends Component {
 
     const placeRows = [...Array(rowCount).keys()].map(i =>
       (places || []).slice(i * placeCountInARow, (i + 1) * placeCountInARow)
-    )
+    );
 
     return (
       <div {...attrs} className={`place-list ${className || ''}`}>
@@ -122,10 +142,12 @@ export default class PlaceList extends Component {
               <Place
                 key={`place-${i}`}
                 place={p}
+                index={h*placeCountInARow + i}
                 active={this.isActive(p.id)}
                 onClick={this.handleClickItem}
-                onChangeName={(event) => onChangePlaceName(i, event.target.value)}
-                onChangeOrder={(direction) => onChangePlaceOrder(i, direction)}
+                onChangeName={onChangePlaceName}
+                onChangeOrder={onChangePlaceOrder}
+                onRemove={onRemovePlace}
                 editable={editable}
                 />
             )}

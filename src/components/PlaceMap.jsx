@@ -27,6 +27,7 @@ export default class PlaceMap extends Component {
       onClickPlace,
       onChangePlaceName,
       onChangePlaceOrder,
+      onRemovePlace,
       onCreateMarker,
       onMoveMarker,
       onDeleteMarker,
@@ -65,6 +66,7 @@ export default class PlaceMap extends Component {
           onClickItem={onClickPlace}
           onChangePlaceName={onChangePlaceName}
           onChangePlaceOrder={onChangePlaceOrder}
+          onRemovePlace={onRemovePlace}
           />
 
         {children}

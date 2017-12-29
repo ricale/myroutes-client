@@ -61,15 +61,18 @@ export default class DaumMap extends Component {
     const {places, selectedPlaceIndex, markable} = this.props;
     const {
       places: newPlaces,
-      selectedPlaceIndex: newSelectedPlaceIndex
+      selectedPlaceIndex: newSelectedPlaceIndex,
+      hasPath: newHasPath
     } = newProps;
 
     if(places !== newPlaces) {
       this.removeAllMarkers();
-      this.initMarkers(newProps.places);
+      this.initMarkers(newPlaces);
 
       this.removePath();
-      this.initPath();
+      if(newHasPath) {
+        this.initPath();
+      }
     }
 
     if(!markable) {

@@ -89,8 +89,7 @@ function _fetch(url, actions, options = {}) {
     return fetch(`${API_HOST}${url}`, fetchOptions)
       .then(checkStatus)
       .then(parseJson)
-      .catch(getErrorHandler(dispatch, actions))
-      .then(getSuccessCallback(dispatch, actions));
+      .then(getSuccessCallback(dispatch, actions), getErrorHandler(dispatch, actions));
   }
 }
 
