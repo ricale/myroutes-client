@@ -1,6 +1,27 @@
 import {API_HOST} from 'utils/constants';
 import sessionHelper from 'utils/sessionHelper';
 
+function getHeaders({contentType, filename}) {
+  const headers = {
+    'Accept-Language': 'ko-kr',
+  };
+
+  const token = sessionHelper.getToken();
+  if(token) {
+    headers['Authorization'] = `JWT ${token}`;
+  }
+
+  if(filename) {
+    headers['Content-Disposition'] = `attachment; filename=${filename}`;
+  }
+
+  headers['Content-Type'] = //!!filename ?
+                            //'multipart/form-data' :
+                            (contentType || 'application/json');
+
+  return headers;
+}
+
 function checkStatus(response) {
   if(response.status >= 200 && response.status < 300) {
     return response;
@@ -65,26 +86,20 @@ function getErrorHandler(dispatch, actions) {
 }
 
 function _fetch(url, actions, options = {}) {
-  const {method, data, contentType} = options;
+  const {method, data} = options;
   const body = options.body ||
     (data ? JSON.stringify(data) : '');
 
   return dispatch => {
     dispatch(actions.request());
 
-    const token = sessionHelper.getToken();
-
     const fetchOptions = {
-      headers: {
-        'Content-Type': contentType || 'application/json',
-        'Accept-Language': 'ko-kr',
-      },
+      headers: getHeaders(options),
       credentials: 'include',
     };
     method && (fetchOptions.method = method);
     body   && (fetchOptions.body   = body);
     data   && (fetchOptions.data   = data);
-    token  && (fetchOptions.headers['Authorization'] = `JWT ${token}`)
 
     return fetch(`${API_HOST}${url}`, fetchOptions)
       .then(checkStatus)

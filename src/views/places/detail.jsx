@@ -40,9 +40,10 @@ class PlaceDetail extends Component {
     const fileLength = files.length;
     const createImage = (i) => {
       const fd = new FormData();
-      fd.append('file', files[i]);
-      return addPlaceImage(id, fd)
-    }
+      const filename = event.target.value.slice('C:\\fakepath\\'.length);
+      fd.append('image', files[i]);
+      return addPlaceImage(id, {body: files[i], filename});
+    };
 
     Promise.all(
       [...Array(fileLength).keys()].map(createImage)

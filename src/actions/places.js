@@ -41,11 +41,11 @@ export function fetchPlace(id) {
 //   );
 // }
 
-export function addPlaceImage(id, body) {
+export function addPlaceImage(id, {body, filename}) {
   return requester.fetch(
     `/places/${id}/images/`,
     actions.placeImages.create,
-    {method: 'POST', body}
+    {method: 'POST', body, filename}
   );
 }
 
