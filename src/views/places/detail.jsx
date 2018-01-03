@@ -64,6 +64,9 @@ class PlaceDetail extends Component {
 
   render() {
     const {place} = this.props;
+
+    const images = (place.images || []).filter(img => !!img.image);
+
     return (
       <div className='place-detail'>
         <h2 className='place-detail__name'>{place.name}</h2>
@@ -81,9 +84,9 @@ class PlaceDetail extends Component {
         </div>
 
         <div className='place-detail__images'>
-          {(place.images || []).map(img =>
+          {images.map(img =>
             <PlaceImage
-              src={`${API_HOST}${img.thumbnail1url}`}
+              src={`${API_HOST}${img.thumbnail1}`}
               key={`img-${img.id}`}
               onClickDelete={this.handleClickDeleteImage(img.id)}
               />

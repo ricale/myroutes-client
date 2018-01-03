@@ -49,6 +49,8 @@ class Place extends Component {
   render() {
     const {place, editable, index, active, onChangeName} = this.props;
 
+    const images = (place.images || []).filter(img => !!img.image);
+
     return (
       <div className={`${active ? 'active' : ''} place-list__place`} onClick={this.handleClick}>
         <div className='place-list__place-info' onClick={this.handleClick}>
@@ -78,11 +80,11 @@ class Place extends Component {
             </span>
           }
         </div>
-        {(place.images || []).map(img =>
+        {images.map(img =>
           <PlaceImage
             width={128}
-            src={`${API_HOST}${img.thumbnail2url}`}
-            originalSrc={`${API_HOST}${img.url}`}
+            src={`${API_HOST}${img.thumbnail2}`}
+            originalSrc={`${API_HOST}${img.image}`}
             key={`img-${img.id}`}
             />
         )}
