@@ -16,13 +16,13 @@ export default class Message extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const {message} = this.props;
+    const {timestamp} = this.props;
     const {
-      message: newMessage,
+      timestamp: newTimestamp,
       duration: newDuration
     } = newProps;
 
-    if(message !== newMessage) {
+    if(timestamp !== newTimestamp) {
       this.setState({show: true}, () => {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(

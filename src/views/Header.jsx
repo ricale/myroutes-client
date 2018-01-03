@@ -38,7 +38,7 @@ class Header extends Component {
   // }
 
   render() {
-    const {loading, message, messageType, hasSession, logout} = this.props;
+    const {loading, message, messageType, messageTimestamp, hasSession, logout} = this.props;
 
     return (
       <div className='header'>
@@ -55,6 +55,7 @@ class Header extends Component {
         <Message
           className='header__message'
           message={message}
+          timestamp={messageTimestamp}
           type={messageType}
           />
 
@@ -65,9 +66,9 @@ class Header extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const {loading, message, messageType} = state.common;
+  const {loading, message, messageType, messageTimestamp} = state.common;
   const hasSession = sessionHelper.hasToken();
-  return {loading, message, messageType, hasSession};
+  return {loading, message, messageType, messageTimestamp, hasSession};
 }
 
 function mapDispatchToProps(dispatch) {

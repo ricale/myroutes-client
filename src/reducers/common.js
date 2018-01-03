@@ -35,6 +35,7 @@ export function common(state = initialState, action) {
          message
       )(data, message);
     newState.messageType = messageType;
+    newState.messageTimestamp = Date.now();
   }
 
   return Object.assign({}, state, newState);
