@@ -13,7 +13,7 @@ const actions = createActions({
       SUCCESS: (response) => {
         sessionHelper.setToken(response.data.token);
         return {
-          message: 'you are successfully logged in.',
+          message: 'You are successfully logged in.',
           messageType: 'success'
         }
       },
@@ -22,8 +22,8 @@ const actions = createActions({
     LOGOUT: {
       REQUEST: () => ({}),
       SUCCESS: () => ({
-        message: 'you are successfully logged out.',
-        messageType: 'error'
+        message: 'You are successfully logged out.',
+        messageType: 'success'
       }),
     },
   }

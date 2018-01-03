@@ -37,8 +37,9 @@ class Login extends Component {
     event.preventDefault();
     const {login, goToRouteList} = this.props;
     const {username, password} = this.state;
-    login({username, password}).then(() =>
-      goToRouteList()
+    login({username, password}).then(
+      () => goToRouteList(),
+      () => ({})
     );
   }
 

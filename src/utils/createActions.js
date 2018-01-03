@@ -23,7 +23,7 @@ export function createActions(hash, options = {}) {
   Object.keys(hash).forEach(modelName =>
     Object.keys(hash[modelName]).forEach(actionName => {
       if(!hash[modelName][actionName]['FAILURE']) {
-        hash[modelName][actionName]['FAILURE'] = ({message}) => ({message});
+        hash[modelName][actionName]['FAILURE'] = (result) => ({...result, messageType: 'error'});
       }
     })
   );

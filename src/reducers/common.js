@@ -25,11 +25,15 @@ export function common(state = initialState, action) {
                   (isSuccess ? -1 : 0) +
                   (isFailure ? -1 : 0);
 
-  const {message, messageType} = (action.payload || {});
+  const {data, message, messageType} = (action.payload || {});
 
   const newState = {loading};
   if(!!message) {
-    newState.message     = message;
+    newState.message =
+      ((d, m) => !!d ?
+        `${Object.keys(d)[0]}: ${d[Object.keys(d)[0]][0]}` :
+         message
+      )(data, message);
     newState.messageType = messageType;
   }
 

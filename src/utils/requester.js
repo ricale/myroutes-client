@@ -75,13 +75,15 @@ function getErrorHandler(dispatch, actions) {
   return (error) => {
     const {status, response} = error;
     if(response && response.json) {
-      response.json().then(({message}) =>
-        dispatchActions({status, message})
+      response.json().then(({data, message}) =>
+        dispatchActions({status, data, message})
       );
 
     } else {
       dispatchActions({status});
     }
+
+    throw status;
   }
 }
 
