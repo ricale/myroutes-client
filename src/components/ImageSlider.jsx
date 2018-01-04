@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 
+import IconButton from 'components/IconButton';
 import {API_HOST} from 'utils/constants';
 
 import './ImageSlider.less';
@@ -16,14 +17,35 @@ export default class ImageSlider extends Component {
     const imageHeight = this.el.offsetHeight;
     const orientation = imageWidth > imageHeight ? 'landscape' : 'portrait';
 
-    console.log()
-
     this.setState({imageWidth, imageHeight, orientation});
   }
 
-  getCurrentImageSrc() {
+  getCurrentImage() {
     const {images, current} = this.props;
-    return `${API_HOST}${images.filter(i => i.id == current)[0].image}`;
+    return images.map((img, i) =>
+      ({index: i, ...img})
+    ).filter(img =>
+      img.id == current
+    )[0];
+  }
+
+  getCurrentImageSrc() {
+    const {image} = this.getCurrentImage();
+    return `${API_HOST}${image}`;
+  }
+
+  getPrevId() {
+    const {images} = this.props;
+    const {index} = this.getCurrentImage();
+    const prevIndex = index > 0 ? index - 1 : images.length - 1;
+    return images[prevIndex].id;
+  }
+
+  getNextId() {
+    const {images} = this.props;
+    const {index} = this.getCurrentImage();
+    const nextIndex = index < images.length - 1 ? index + 1 : 0;
+    return images[nextIndex].id;
   }
 
   getImageStyle() {
@@ -48,7 +70,7 @@ export default class ImageSlider extends Component {
   }
 
   render() {
-    const {show} = this.props;
+    const {show, onClickClose, onClickPrev, onClickNext} = this.props;
     const {orientation} = this.state;
 
     if(!show) {
@@ -57,13 +79,34 @@ export default class ImageSlider extends Component {
 
     return (
       <div className={`image-slider ${orientation || ''}`}>
-        <img
-          ref={i => this.el = i}
-          src={this.getCurrentImageSrc()}
-          style={this.getImageStyle()}
-          onLoad={this.handleLoadImage}
-          className='image-slider__image'
+        <div className={`image-slider__image-wrapper ${orientation || ''}`}>
+          <img
+            ref={i => this.el = i}
+            src={this.getCurrentImageSrc()}
+            style={this.getImageStyle()}
+            onLoad={this.handleLoadImage}
+            className='image-slider__image'
+            />
+        </div>
+        <IconButton
+          className='image-slider__button close'
+          iconName='remove'
+          onClick={onClickClose}
           />
+        {/*
+        <IconButton
+          className='image-slider__button prev'
+          iconName='caret-left'
+          iconSize='4x'
+          onClick={() => onClickPrev(this.getPrevId())}
+          />
+        <IconButton
+          className='image-slider__button next'
+          iconName='caret-right'
+          iconSize='4x'
+          onClick={() => onClickNext(this.getNextId())}
+          />
+        */}
       </div>
     );
   }

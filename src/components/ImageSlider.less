@@ -10,22 +10,53 @@
   cursor: pointer;
 
   background-color: rgba(0, 0, 0, 0.5);
-  .image-slider__image {
+}
+
+.image-slider__image-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.image-slider.landscape,
+.image-slider.portrait {
+  .image-slider__image-wrapper {
+    display: flex;
+    justify-content: center;
   }
 }
 
 .image-slider.landscape {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  .image-slider__image {
+  .image-slider__image-wrapper {
+    flex-direction: column;
   }
 }
 
 .image-slider.portrait {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  .image-slider__image {
+  .image-slider__image-wrapper {
+    flex-direction: row;
   }
+}
+
+.image-slider__button {
+  position: absolute;
+  background-color: rgba(246, 246, 246, 0.1);
+}
+
+.image-slider__button.close {
+  top: 0;
+  right: 0;
+}
+
+.image-slider__button.prev {
+  bottom: 0;
+  left: 0;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.image-slider__button.next {
+  bottom: 0;
+  right: 0;
+  padding-left: 40px;
+  padding-right: 40px;
 }

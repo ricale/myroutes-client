@@ -11,7 +11,8 @@ export default class Button extends Component {
 
   handleClick(event) {
     event.preventDefault();
-    this.props.onClick(event);
+    const {onClick} = this.props;
+    onClick && onClick();
   }
 
   getClassName() {
@@ -20,11 +21,11 @@ export default class Button extends Component {
   }
 
   render() {
-    const {to, children} = this.props;
+    const {to, children, className, onClick, ...attrs} = this.props;
 
     if(to) {
       return (
-        <Link to={to} className={this.getClassName()}>
+        <Link to={to} className={this.getClassName()} {...attrs}>
           {children}
         </Link>
       )
@@ -32,7 +33,7 @@ export default class Button extends Component {
 
     } else {
       return (
-        <a href='#' onClick={this.handleClick} className={this.getClassName()}>
+        <a href='#' onClick={this.handleClick} className={this.getClassName()} {...attrs}>
           {children}
         </a>
       );

@@ -4,7 +4,7 @@ import {push} from 'react-router-redux';
 
 import {fetchRoute, deleteRoute} from 'actions/routes';
 import {fetchPlace} from 'actions/places';
-import {showSlider} from 'actions/slider';
+import {showSlider, hideSlider} from 'actions/slider';
 
 import PlaceMap from 'components/PlaceMap';
 import IconButton from 'components/IconButton';
@@ -23,7 +23,6 @@ class RouteDetail extends Component {
 
   componentDidMount() {
     console.log('RouteDetail componentDidMount');
-    console.log(showSlider)
     const {fetchRoute, id} = this.props;
     fetchRoute(id);
   }
@@ -64,7 +63,7 @@ class RouteDetail extends Component {
   }
 
   render() {
-    const {route, place, slider} = this.props;
+    const {route, place, slider, showSlider, hideSlider} = this.props;
 
     if(!route || !route.id) {
       return <div></div>
@@ -101,6 +100,10 @@ class RouteDetail extends Component {
           images={this.getPlaceImages()}
           show={slider.show}
           current={slider.current}
+
+          onClickClose={() => hideSlider()}
+          onClickNext={(id) => showSlider(id)}
+          onClickPrev={(id) => showSlider(id)}
           />
       </div>
     );
@@ -118,14 +121,13 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchRoute: (...args) =>
-      dispatch(fetchRoute(...args)),
-    deleteRoute: (...args) =>
-      dispatch(deleteRoute(...args)),
-    fetchPlace: (...args) =>
-      dispatch(fetchPlace(...args)),
-    showSlider: (...args) =>
-      dispatch(showSlider(...args)),
+    fetchRoute: (...args) => dispatch(fetchRoute(...args)),
+    deleteRoute: (...args) => dispatch(deleteRoute(...args)),
+    fetchPlace: (...args) => dispatch(fetchPlace(...args)),
+
+    showSlider: (...args) => dispatch(showSlider(...args)),
+    hideSlider: (...args) => dispatch(hideSlider(...args)),
+
     goToList: () =>
       dispatch(push(pathHelper.routes.list())),
   };
