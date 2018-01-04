@@ -47,7 +47,14 @@ class Place extends Component {
   }
 
   render() {
-    const {place, editable, index, active, onChangeName} = this.props;
+    const {
+      place,
+      editable,
+      index,
+      active,
+      onChangeName,
+      onClickImage
+    } = this.props;
 
     const images = (place.images || []).filter(img => !!img.image);
 
@@ -82,10 +89,10 @@ class Place extends Component {
         </div>
         {images.map(img =>
           <PlaceImage
+            key={`img-${img.id}`}
             width={128}
             src={`${API_HOST}${img.thumbnail2}`}
-            originalSrc={`${API_HOST}${img.image}`}
-            key={`img-${img.id}`}
+            onClick={onClickImage && (() => onClickImage(img))}
             />
         )}
       </div>
@@ -121,6 +128,7 @@ export default class PlaceList extends Component {
       onClickItem,
       onChangePlaceName,
       onChangePlaceOrder,
+      onClickPlaceImage,
       onRemovePlace,
       className,
       ...attrs
@@ -149,6 +157,7 @@ export default class PlaceList extends Component {
                 onClick={this.handleClickItem}
                 onChangeName={onChangePlaceName}
                 onChangeOrder={onChangePlaceOrder}
+                onClickImage={onClickPlaceImage}
                 onRemove={onRemovePlace}
                 editable={editable}
                 />

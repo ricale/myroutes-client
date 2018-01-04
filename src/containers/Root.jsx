@@ -9,6 +9,7 @@ import createHistory from 'history/createHashHistory';
 import rootReducer from 'reducers';
 
 import Header from 'views/Header';
+
 import Login  from 'views/users/Login';
 import RouteList   from 'views/routes/list';
 import RouteDetail from 'views/routes/detail';
@@ -39,13 +40,14 @@ export default class Root extends Component {
         <Router history={history}>
           <div>
             <Route path='/' component={Header} />
-            <Route path='/login' component={Login} />
 
             <div className='contents'>
+              <Route path='/login' exact component={Login} />
+
               <Route path='/routes'               exact component={RouteList} />
               <Route path='/routes/new'           exact component={NewRoute} />
               <Route path='/routes/:id(\d+)'      exact component={RouteDetail} />
-              <Route path='/routes/:id(\d+)/edit'       component={EditRoute} />
+              <Route path='/routes/:id(\d+)/edit' exact component={EditRoute} />
 
               <Route path='/routes/:routeId/places/:id' exact component={PlaceDetail} />
             </div>

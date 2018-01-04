@@ -4,10 +4,11 @@ import {push} from 'react-router-redux';
 
 import {fetchRoute, deleteRoute} from 'actions/routes';
 import {fetchPlace} from 'actions/places';
+import {showSlider} from 'actions/slider';
 
 import PlaceMap from 'components/PlaceMap';
-import PlaceImage from 'components/PlaceImage';
 import IconButton from 'components/IconButton';
+import ImageSlider from 'components/ImageSlider';
 import pathHelper from 'utils/pathHelper';
 
 import './detail.less';
@@ -17,10 +18,12 @@ class RouteDetail extends Component {
     super(props);
     this.state = {};
     this.handleClickDelete = this.handleClickDelete.bind(this);
+    this.handleClickPlaceImage = this.handleClickPlaceImage.bind(this);
   }
 
   componentDidMount() {
     console.log('RouteDetail componentDidMount');
+    console.log(showSlider)
     const {fetchRoute, id} = this.props;
     fetchRoute(id);
   }
@@ -48,8 +51,20 @@ class RouteDetail extends Component {
     );
   }
 
+  handleClickPlaceImage(placeImage) {
+    this.props.showSlider(placeImage.id);
+  }
+
+  getPlaceImages() {
+    return this.props.route.places.map(p =>
+      p.images
+    ).reduce((result, current) =>
+      result.concat(current)
+    , []);
+  }
+
   render() {
-    const {route, place} = this.props;
+    const {route, place, slider} = this.props;
 
     if(!route || !route.id) {
       return <div></div>
@@ -77,9 +92,16 @@ class RouteDetail extends Component {
             editable={false}
             searchable={false}
             hasPath={true}
-            >
-          </PlaceMap>
+
+            onClickPlaceImage={this.handleClickPlaceImage}
+            />
         </div>
+
+        <ImageSlider
+          images={this.getPlaceImages()}
+          show={slider.show}
+          current={slider.current}
+          />
       </div>
     );
   }
@@ -89,7 +111,8 @@ function mapStateToProps(state, ownProps) {
   return {
     id: ownProps.match.params.id,
     route: state.routes.current,
-    place: state.places.current
+    place: state.places.current,
+    slider: state.slider,
   };
 }
 
@@ -101,8 +124,10 @@ function mapDispatchToProps(dispatch) {
       dispatch(deleteRoute(...args)),
     fetchPlace: (...args) =>
       dispatch(fetchPlace(...args)),
-    goToList: (...args) =>
-      dispatch(push(pathHelper.routes.list()))
+    showSlider: (...args) =>
+      dispatch(showSlider(...args)),
+    goToList: () =>
+      dispatch(push(pathHelper.routes.list())),
   };
 }
 

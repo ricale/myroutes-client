@@ -21,7 +21,6 @@ export default class PlaceImage extends Component {
     this.state = {};
     this.handleLoadImage = this.handleLoadImage.bind(this);
     this.handleClickImage = this.handleClickImage.bind(this);
-    this.handleClickOriginalImage = this.handleClickOriginalImage.bind(this);
   }
 
   componentWillMount() {
@@ -56,17 +55,8 @@ export default class PlaceImage extends Component {
   }
 
   handleClickImage() {
-    const {originalSrc} = this.props;
-
-    if(!originalSrc) {
-      return;
-    }
-
-    this.setState({showOriginal: true});
-  }
-
-  handleClickOriginalImage() {
-    this.setState({showOriginal: false});
+    const {onClick} = this.props;
+    onClick && onClick();
   }
 
   isRotated90Degrees() {
@@ -93,14 +83,14 @@ export default class PlaceImage extends Component {
   }
 
   getImageStyle() {
-    const {width, correctImageOrientation, originalSrc} = this.props;
+    const {width, correctImageOrientation, onClick} = this.props;
 
     const style = {
       maxWidth: width,
       maxHeight: width,
     };
 
-    if(originalSrc) {
+    if(onClick) {
       style.cursor = 'pointer';
     }
 
@@ -143,18 +133,6 @@ export default class PlaceImage extends Component {
     }
   }
 
-  getOriginalImgWrapperClassName() {
-    const defaultClassName = 'place-image__original-img-wrapper';
-    const {
-      imageWidth,
-      imageHeight,
-    } = this.state;
-
-    const orientationClassName = ((w, h) => w - h > 0 ? 'landscape' : 'portrait')(imageWidth, imageHeight);
-
-    return `${defaultClassName} ${orientationClassName}`;
-  }
-
   render() {
     const {
       src,
@@ -163,10 +141,6 @@ export default class PlaceImage extends Component {
       correctImageOrientation,
       originalSrc
     } = this.props;
-
-    const {
-      showOriginal
-    } = this.state;
 
     const containerStyle = this.getContainerSize();
 
@@ -194,15 +168,6 @@ export default class PlaceImage extends Component {
         {/*this.isNeedWall() &&
           <div className='place-image__wall' style={wallStyle}></div>
         */}
-
-        {showOriginal &&
-          <div className={this.getOriginalImgWrapperClassName()} onClick={this.handleClickOriginalImage}>
-            <img
-              src={originalSrc}
-              className='place-image__original-img'
-              />
-          </div>
-        }
       </div>
     );
   }
