@@ -17,24 +17,18 @@
   height: 100%;
 }
 
-.image-slider.landscape,
-.image-slider.portrait {
-  .image-slider__image-wrapper {
-    display: flex;
-    justify-content: center;
-  }
+.image-slider__image-wrapper.landscape,
+.image-slider__image-wrapper.portrait {
+  display: flex;
+  justify-content: center;
 }
 
-.image-slider.landscape {
-  .image-slider__image-wrapper {
-    flex-direction: column;
-  }
+.image-slider__image-wrapper.landscape {
+  flex-direction: column;
 }
 
-.image-slider.portrait {
-  .image-slider__image-wrapper {
-    flex-direction: row;
-  }
+.image-slider__image-wrapper.portrait {
+  flex-direction: row;
 }
 
 .image-slider__button {
