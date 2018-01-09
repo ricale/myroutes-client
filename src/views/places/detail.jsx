@@ -35,21 +35,23 @@ class PlaceDetail extends Component {
 
   handleChangeFile(event) {
     const {addPlaceImage, fetchPlace, id} = this.props;
+    const uploadImage = (args) => () => addPlaceImage(...args).then(() => fetchPlace(args[0]));
 
     const files = this.refs.file.files;
     const fileLength = files.length;
-    const createImage = (i) => {
-      const fd = new FormData();
-      const filename = event.target.value.slice('C:\\fakepath\\'.length);
-      fd.append('image', files[i]);
-      return addPlaceImage(id, {body: files[i], filename});
-    };
 
-    Promise.all(
-      [...Array(fileLength).keys()].map(createImage)
-    ).then(() =>
-      fetchPlace(id)
-    );
+    [...Array(fileLength).keys()].map(i =>
+      [
+        id, {
+          body: files[i],
+          filename: event.target.value.slice('C:\\fakepath\\'.length)
+        }
+      ]
+
+    ).reduce((p, args) =>
+      p ? p.then(uploadImage(args)) : uploadImage(args)()
+
+    , undefined)
   }
 
   handleClickDeleteImage(imageId) {
