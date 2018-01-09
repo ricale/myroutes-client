@@ -12,7 +12,7 @@ export default class Button extends Component {
   handleClick(event) {
     event.preventDefault();
     const {onClick} = this.props;
-    onClick && onClick();
+    onClick && onClick(event);
   }
 
   getClassName() {

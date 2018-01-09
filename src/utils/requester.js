@@ -34,6 +34,9 @@ function checkStatus(response) {
 }
 
 function parseJson(response) {
+  if(response.status === 204) {
+    return new Promise((resolve, reject) => resolve({}));
+  }
   return response.json();
 }
 
