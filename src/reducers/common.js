@@ -14,6 +14,21 @@ function isFailureAction(actionType) {
   return !!actionType.match(/\/FAILURE$/);
 }
 
+// FIXME: unclear logic
+function getMessage(data, message) {
+  if(!data) {
+    return message;
+  }
+  const firstKey = Object.keys(data)[0];
+  const firstValue = data[firstKey];
+
+  if(Array.isArray(firstValue)) {
+    return `${firstKey}: ${firstValue[0]}`
+  } else {
+    return message || firstValue;
+  }
+}
+
 export function common(state = initialState, action) {
   const type = action.type;
   const isRequest = isRequestAction(type);
@@ -29,11 +44,7 @@ export function common(state = initialState, action) {
 
   const newState = {loading};
   if(!!message) {
-    newState.message =
-      ((d, m) => !!d ?
-        `${Object.keys(d)[0]}: ${d[Object.keys(d)[0]][0]}` :
-         message
-      )(data, message);
+    newState.message = getMessage(data, message);
     newState.messageType = messageType;
     newState.messageTimestamp = Date.now();
   }

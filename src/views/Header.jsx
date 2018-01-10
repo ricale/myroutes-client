@@ -42,7 +42,12 @@ class Header extends Component {
 
     return (
       <div className='header'>
-        <h1><Link to={pathHelper.routes.list()}>myroutes</Link></h1>
+        <h1>
+          {hasSession ?
+            <Link to={pathHelper.routes.list()}>myroutes</Link> :
+            'myroutes'
+          }
+        </h1>
         <ul className='header__menu'>
           <li>
             {hasSession &&
