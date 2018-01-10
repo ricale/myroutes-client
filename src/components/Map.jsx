@@ -71,7 +71,7 @@ export default class DaumMap extends Component {
 
       this.removePath();
       if(newHasPath) {
-        this.initPath();
+        this.initPath(newProps);
       }
     }
 
@@ -171,8 +171,8 @@ export default class DaumMap extends Component {
     }
   }
 
-  initPath() {
-    if(!this.hasPlaces()) {
+  initPath(props = this.props) {
+    if(!this.hasPlaces(props)) {
       return;
     }
     this.path = new daum.maps.Polyline({
