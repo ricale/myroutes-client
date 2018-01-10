@@ -3,8 +3,11 @@
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=00c12baa91201a619987f3b997d64c05&libraries=services"></script>
 </head>
 <body>
-    <div id='container'></div>
-
-    <script src='dist/index.js'></script>
+  <div id='container'></div>
+  <script type="text/javascript">
+    var element = document.createElement('script');
+    element.src = "dist/index.js?" + Date.now();
+    document.getElementsByTagName('body')[0].appendChild(element);
+  </script>
 </body>
 </html>
