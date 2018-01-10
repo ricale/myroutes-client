@@ -10,6 +10,7 @@ import PlaceMap from 'components/PlaceMap';
 import IconButton from 'components/IconButton';
 import ImageSlider from 'components/ImageSlider';
 import pathHelper from 'utils/pathHelper';
+import sessionHelper from 'utils/sessionHelper';
 
 import './detail.less';
 
@@ -63,7 +64,7 @@ class RouteDetail extends Component {
   }
 
   render() {
-    const {route, place, slider, showSlider, hideSlider} = this.props;
+    const {route, place, slider, showSlider, hideSlider, hasSession} = this.props;
 
     if(!route || !route.id) {
       return <div></div>
@@ -73,14 +74,16 @@ class RouteDetail extends Component {
       <div className='route-detail'>
         <div className='route-detail__header'>
           <h2 className='route-detail__name'>{route.name}</h2>
-          <ul className='route-detail__menu'>
-            <li>
-              <IconButton to={pathHelper.routes.edit(route.id)} iconName='edit'/>
-            </li>
-            <li>
-              <IconButton onClick={this.handleClickDelete} iconName='remove' />
-            </li>
-          </ul>
+          {hasSession &&
+            <ul className='route-detail__menu'>
+              <li>
+                <IconButton to={pathHelper.routes.edit(route.id)} iconName='edit'/>
+              </li>
+              <li>
+                <IconButton onClick={this.handleClickDelete} iconName='remove' />
+              </li>
+            </ul>
+          }
         </div>
 
         <div className='route-detail__content'>
@@ -116,6 +119,7 @@ function mapStateToProps(state, ownProps) {
     route: state.routes.current,
     place: state.places.current,
     slider: state.slider,
+    hasSession: sessionHelper.hasToken()
   };
 }
 

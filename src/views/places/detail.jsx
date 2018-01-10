@@ -6,6 +6,7 @@ import {fetchPlace, addPlaceImage, deletePlaceImage} from 'actions/places';
 import PlaceImage from 'components/PlaceImage';
 import IconButton from 'components/IconButton';
 import pathHelper from 'utils/pathHelper'
+import sessionHelper from 'utils/sessionHelper'
 import {API_HOST} from 'utils/constants';
 
 import './detail.less';
@@ -65,7 +66,7 @@ class PlaceDetail extends Component {
   }
 
   render() {
-    const {place} = this.props;
+    const {place, hasSession} = this.props;
 
     const images = (place.images || []).filter(img => !!img.image);
 
@@ -74,23 +75,25 @@ class PlaceDetail extends Component {
         <h2 className='place-detail__name'>{place.name}</h2>
         <div className='place-detail__position'>{`${numeral(place.latitude).format('0.000')},${numeral(place.longitude).format('0.000')}`}</div>
 
-        <div className='place-detail__menu'>
-          <input
-            ref='file'
-            type='file'
-            name='file'
-            multiple='true'
-            accept=".jpg, .jpeg, .png, .gif"
-            onChange={this.handleChangeFile} />
-          <IconButton to={pathHelper.routes.detail(place.route_id)} iconName='arrow-left' />
-        </div>
+        {hasSession &&
+          <div className='place-detail__menu'>
+            <input
+              ref='file'
+              type='file'
+              name='file'
+              multiple='true'
+              accept=".jpg, .jpeg, .png, .gif"
+              onChange={this.handleChangeFile} />
+            <IconButton to={pathHelper.routes.detail(place.route_id)} iconName='arrow-left' />
+          </div>
+        }
 
         <div className='place-detail__images'>
           {images.map(img =>
             <PlaceImage
               src={`${API_HOST}${img.thumbnail1}`}
               key={`img-${img.id}`}
-              onClickDelete={this.handleClickDeleteImage(img.id)}
+              onClickDelete={hasSession && this.handleClickDeleteImage(img.id)}
               />
           )}
         </div>
@@ -102,7 +105,8 @@ class PlaceDetail extends Component {
 function mapStateToProps(state, ownProps) {
   return {
     id: ownProps.match.params.id,
-    place: state.places.current
+    place: state.places.current,
+    hasSession: sessionHelper.hasToken()
   };
 }
 

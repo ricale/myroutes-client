@@ -71,7 +71,7 @@ class Place extends Component {
           <div className='place-list__place-address'>{place.address}</div>
           <div className='place-list__place-position'>{`${numeral(place.latitude).format('0.000')},${numeral(place.longitude).format('0.000')}`}</div>
           {!editable &&
-            <IconButton to={pathHelper.places.detail(place.route_id, place.id)} iconName='edit'/>
+            <IconButton to={pathHelper.places.detail(place.route_id, place.id)} iconName='ellipsis-h'/>
           }
           {editable &&
             <IconButton onClick={this.handleRemove} iconName='remove'/>
